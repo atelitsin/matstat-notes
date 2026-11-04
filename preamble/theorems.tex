@@ -1,23 +1,32 @@
 % Сквозная нумерация внутри раздела (лекции): Теорема 1.1, Определение 1.2, ...
-% refname задаёт, как окружение называется в \cref{...}.
-\declaretheorem[name=Теорема, numberwithin=section,
-  refname={теорема,теоремы}, Refname={Теорема,Теоремы}]{theorem}
-\declaretheorem[name=Лемма, sibling=theorem,
-  refname={лемма,леммы}, Refname={Лемма,Леммы}]{lemma}
-\declaretheorem[name=Утверждение, sibling=theorem,
-  refname={утверждение,утверждения}, Refname={Утверждение,Утверждения}]{proposition}
-\declaretheorem[name=Следствие, sibling=theorem,
-  refname={следствие,следствия}, Refname={Следствие,Следствия}]{corollary}
+%
+% Все нумерованные окружения делят один счётчик theorem. Чтобы \cref при этом
+% писал «утверждение 1.6», а не «теорема 1.6», каждое окружение получает
+% собственный счётчик-псевдоним (aliascnt), который на деле равен theorem.
+%
+% \sharedtheorem{<окружение>}{<Заголовок>}{<ед. ч. для \cref>}{<мн. ч.>}
+\newcommand{\sharedtheorem}[4]{%
+  \newaliascnt{#1}{theorem}%
+  \newtheorem{#1}[#1]{#2}%
+  \aliascntresetthe{#1}%
+  \crefname{#1}{#3}{#4}%
+}
 
-\declaretheorem[name=Определение, style=definition, sibling=theorem,
-  refname={определение,определения}, Refname={Определение,Определения}]{definition}
-\declaretheorem[name=Пример, style=definition, sibling=theorem,
-  refname={пример,примеры}, Refname={Пример,Примеры}]{example}
-\declaretheorem[name=Упражнение, style=definition, sibling=theorem,
-  refname={упражнение,упражнения}, Refname={Упражнение,Упражнения}]{exercise}
+\theoremstyle{plain}
+\newtheorem{theorem}{Теорема}[section]
+\crefname{theorem}{теорема}{теоремы}
+\sharedtheorem{lemma}{Лемма}{лемма}{леммы}
+\sharedtheorem{proposition}{Утверждение}{утверждение}{утверждения}
+\sharedtheorem{corollary}{Следствие}{следствие}{следствия}
 
-\declaretheorem[name=Замечание, style=remark, numbered=no]{remark}
-\declaretheorem[name=Примечание, style=remark, numbered=no]{note}
+\theoremstyle{definition}
+\sharedtheorem{definition}{Определение}{определение}{определения}
+\sharedtheorem{example}{Пример}{пример}{примеры}
+\sharedtheorem{exercise}{Упражнение}{упражнение}{упражнения}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Замечание}
+\newtheorem*{note}{Примечание}
 
 \renewcommand{\proofname}{Доказательство}
 

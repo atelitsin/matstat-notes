@@ -333,3 +333,6 @@ TSWLatexianTemp*
 ## matstat-notes
 build/
 *.pdf
+
+# macOS
+.DS_Store

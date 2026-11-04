@@ -11,9 +11,108 @@
 
 \subsection{Теорема о предельном распределении эмпирической вероятности}
 
-\begin{theorem}
-  Для любого $B \in \mathcal{B}(\R)$ выполняется
+\begin{reminder}
+  Последовательность случайных величин $\{\xi_n, n \in \N\}$ сходится
+  к случайной величине~$\xi$ почти наверное, если
   \[
-    \Pemp(B) \toas \P(B) \quad \textup{при } n \to \infty.
+    \P\Bigl(\bigl\{\omega \colon \lim_{n \to \infty} \xi_n(\omega) = \xi(\omega)\bigr\}\Bigr) = 1.
+  \]
+  Обозначение: $\xi_n \toas \xi$.
+\end{reminder}
+
+\begin{theorem}[УЗБЧ Колмогорова]
+  \label{lec02:slln}
+  Пусть $\{\xi_n, n \in \N\}$~--- последовательность независимых
+  одинаково распределённых случайных величин, причём $\E\abs{\xi_1} < \infty$. Тогда
+  \[
+    \frac{\xi_1 + \cdots + \xi_n}{n} \toas a = \E\xi_1 \quad \textup{при } n \to \infty.
   \]
 \end{theorem}
+
+Теорема принимается без доказательства.
+
+\begin{theorem}
+  \label{lec02:emp-prob}
+  Для любого $B \in \mathcal{B}(\R)$ выполняется
+  \[
+    \Pemp(B) \toas \P_\xi(B) \quad \textup{при } n \to \infty,
+  \]
+  и для любого $x \in \R$ выполняется
+  \[
+    F_n^*(x) \toas F_\xi(x) \quad \textup{при } n \to \infty.
+  \]
+\end{theorem}
+
+\begin{proof}
+  По определению эмпирической вероятности
+  \[
+    \Pemp(B) = \frac{1}{n} \sum_{k=1}^{n} \Ind{X_k \in B},
+  \]
+  то есть $\Pemp(B)$~--- выборочное среднее индикаторов $\Ind{X_k \in B}$.
+  Индикаторы независимы и одинаково распределены, поскольку такими являются~$X_k$, и
+  \[
+    \E\Ind{X_k \in B} = \P\{X_k \in B\} = \P_\xi(B).
+  \]
+  Индикаторы ограничены, поэтому $\E\abs{\Ind{X_k \in B}} \le 1 < \infty$, и по
+  УЗБЧ в форме Колмогорова (\cref{lec02:slln}) получаем
+  \[
+    \Pemp(B) = \frac{1}{n} \sum_{k=1}^{n} \Ind{X_k \in B} \toas \P_\xi(B)
+    \quad \textup{при } n \to \infty.
+  \]
+  Второе утверждение получается из первого при $B = (-\infty, x]$:
+  $F_n^*(x) = \Pemp\bigl((-\infty, x]\bigr)$ и $F_\xi(x) = \P_\xi\bigl((-\infty, x]\bigr)$.
+\end{proof}
+
+\subsection{Теорема Гливенко--Кантелли}
+
+\begin{theorem}[Гливенко--Кантелли]
+  \label{lec02:glivenko}
+  Пусть $F_\xi(x)$~--- функция распределения случайной величины~$\xi$,
+  а $F_n^*(x)$~--- эмпирическая функция распределения, построенная по выборке из~$\xi$. Тогда
+  \[
+    \sup_{x \in \R} \abs{F_n^*(x) - F_\xi(x)} \toas 0 \quad \textup{при } n \to \infty.
+  \]
+\end{theorem}
+
+\begin{remark}
+  На лекции теорема принята без доказательства; доказательство есть в учебнике.
+  % TODO: указать книгу и страницу.
+\end{remark}
+
+\begin{reminder}[Сходимость по распределению]
+  Последовательность случайных величин $\{\xi_n, n \in \N\}$ сходится
+  к случайной величине~$\xi$ по распределению, если в каждой точке~$x$,
+  в которой $F_\xi$ непрерывна, выполнено
+  \[
+    F_{\xi_n}(x) \to F_\xi(x) \quad \text{при } n \to \infty.
+  \]
+  Обозначение: $\xi_n \tod \xi$.
+\end{reminder}
+
+\begin{theorem}
+  \label{lec02:clt-emp}
+  Для любого борелевского множества $B \in \mathcal{B}(\R)$ выполняется
+  \[
+    \sqrt{n}\bigl(\Pemp(B) - \P_\xi(B)\bigr) \tod \zeta \sqrt{\P_\xi(B)\bigl(1 - \P_\xi(B)\bigr)}
+    \quad \textup{при } n \to \infty,
+  \]
+  где $\zeta \sim \Norm(0, 1)$.
+\end{theorem}
+
+\begin{proof}
+  Обозначим $p = \P_\xi(B)$. По определению эмпирической вероятности
+  \[
+    \Pemp(B) - p = \frac{1}{n} \sum_{k=1}^{n} \bigl(\Ind{X_k \in B} - p\bigr).
+  \]
+  Индикаторы $\Ind{X_k \in B}$ независимы, одинаково распределены и имеют
+  распределение $\Bern(p)$, поэтому
+  \[
+    \E\Ind{X_k \in B} = p, \qquad \D\Ind{X_k \in B} = p(1 - p).
+  \]
+  Применяя ЦПТ для независимых одинаково распределённых случайных величин, получаем
+  \[
+    \sqrt{n}\bigl(\Pemp(B) - p\bigr)
+    = \frac{\sum_{k=1}^{n} \bigl(\Ind{X_k \in B} - p\bigr)}{\sqrt{n}}
+    \tod \zeta \sqrt{p(1 - p)}. \qedhere
+  \]
+\end{proof}

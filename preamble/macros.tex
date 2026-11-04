@@ -20,12 +20,13 @@
 \newcommand{\sample}{X_1, \ldots, X_n}              % выборка
 \newcommand{\Xbar}{\overline{X}}                    % выборочное среднее
 \newcommand{\est}[1]{\widehat{#1}}                  % оценка
-\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+\newcommand{\Pemp}{\P_n^{*}}                        % эмпирическое распределение
+\newcommand{\iid}{\overset{\textup{i.i.d.}}{\sim}}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 % ---------- Сходимости ----------
-\newcommand{\toas}{\xrightarrow{\text{п.н.}}}
+\newcommand{\toas}{\xrightarrow{\textup{п.н.}}}
 \newcommand{\toP}{\xrightarrow{\P}}
 \newcommand{\tod}{\xrightarrow{d}}
 \newcommand{\toLp}[1]{\xrightarrow{L_{#1}}}
@@ -39,6 +40,11 @@
 \newcommand{\Unif}{\mathrm{U}}
 
 % ---------- Прочее ----------
+% Наклонные знаки ≤ и ≥ во всём конспекте (как принято в русских учебниках)
+\renewcommand{\le}{\leqslant}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\ge}{\geqslant}
+\renewcommand{\geq}{\geqslant}
 \newcommand{\eqdef}{\coloneqq}
 \newcommand{\abs}[1]{\lvert #1 \rvert}
 \renewcommand{\epsilon}{\varepsilon}

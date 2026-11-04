@@ -1,0 +1,68 @@
+% =====================================================================
+%  Список обозначений. Добавляя новый макрос в preamble/macros.tex,
+%  не забудьте дописать его сюда.
+% =====================================================================
+\section*{Основные обозначения}
+\addcontentsline{toc}{section}{Основные обозначения}
+
+\newcommand{\notationgroup}[1]{%
+  \midrule\multicolumn{2}{@{}l}{\textbf{#1}}\\[0.2em]}
+
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{@{} >{$\displaystyle}p{0.28\textwidth}<{$}
+                      >{\raggedright\arraybackslash}p{0.68\textwidth} @{}}
+  \toprule
+  \multicolumn{1}{@{}l}{\textbf{Обозначение}} & \textbf{Смысл} \\
+  \endfirsthead
+  \toprule
+  \multicolumn{1}{@{}l}{\textbf{Обозначение}} & \textbf{Смысл} \\
+  \endhead
+  \bottomrule
+  \endfoot
+
+  \notationgroup{Множества}
+  \R,\ \N,\ \Z            & вещественные, натуральные и целые числа \\
+
+  \notationgroup{Вероятность и моменты}
+  \P(A)                   & вероятность события $A$ \\
+  \E X                    & математическое ожидание \\
+  \D X = \Var X           & дисперсия: $\E (X - \E X)^2$ \\
+  \cov(X, Y)              & ковариация: $\E (X - \E X)(Y - \E Y)$ \\
+  \corr(X, Y)             & коэффициент корреляции: $\frac{\cov(X, Y)}{\sqrt{\D X \, \D Y}}$ \\
+  \Ind{A}                 & индикатор события $A$ (равен $1$, если $A$ произошло, иначе $0$) \\
+
+  \notationgroup{Выборка и статистическая модель}
+  \sample                 & выборка объёма $n$ \\
+  X_i \iid F              & $X_i$ независимы и одинаково распределены с функцией распределения $F$ \\
+  \Th                     & параметрическое множество \\
+  \{\Pt : \theta \in \Th\} & параметрическое семейство распределений \\
+  \Pt,\ \Et,\ \Dt         & вероятность, матожидание и дисперсия при значении параметра $\theta$ \\
+  \est\theta              & оценка параметра $\theta$ (функция от выборки) \\
+  \Xbar                   & выборочное среднее: $\frac1n \sum_{i=1}^n X_i$ \\
+  S^2                     & выборочная дисперсия: $\frac1n \sum_{i=1}^n (X_i - \Xbar)^2$ \\
+  s^2                     & исправленная (несмещённая) выборочная дисперсия: $\frac{1}{n-1} \sum_{i=1}^n (X_i - \Xbar)^2$ \\
+  \est F_n(x)             & эмпирическая функция распределения \\
+
+  \notationgroup{Сходимости случайных величин}
+  \xi_n \toas \xi         & сходимость почти наверное: $\P(\xi_n \to \xi) = 1$ \\
+  \xi_n \toP \xi          & сходимость по вероятности: $\forall \epsilon > 0 \;\; \P(\abs{\xi_n - \xi} > \epsilon) \to 0$ \\
+  \xi_n \toLp{p} \xi      & сходимость в $L_p$: $\E \abs{\xi_n - \xi}^p \to 0$ \\
+  \xi_n \tod \xi          & сходимость по распределению: $F_{\xi_n}(x) \to F_\xi(x)$ во всех точках непрерывности $F_\xi$ \\
+
+  \notationgroup{Распределения}
+  \Norm(\mu, \sigma^2)    & нормальное с параметрами $\mu$ (среднее) и $\sigma^2$ (дисперсия) \\
+  \Bern(p)                & Бернулли: $\P(X = 1) = p$, $\P(X = 0) = 1 - p$ \\
+  \Bin(n, p)              & биномиальное: число успехов в $n$ испытаниях Бернулли \\
+  \Pois(\lambda)          & пуассоновское: $\P(X = k) = e^{-\lambda} \frac{\lambda^k}{k!}$, $k = 0, 1, \ldots$ \\
+  \Exp(\lambda)           & экспоненциальное с плотностью $\lambda e^{-\lambda x}$, $x \ge 0$ \\
+  \Unif[a, b]             & равномерное на отрезке $[a, b]$ \\
+
+  \notationgroup{Прочее}
+  a \eqdef b              & $a$ по определению равно $b$ \\
+  \argmax_\theta f(\theta) & точка, в которой $f$ достигает максимума \\
+\end{longtable}
+\endgroup
+
+\clearpage

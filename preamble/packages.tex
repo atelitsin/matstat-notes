@@ -1,0 +1,40 @@
+% ---------- Язык и кодировка (pdfLaTeX) ----------
+\usepackage{cmap}              % копируемый/ищущийся русский текст в PDF (до fontenc)
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+
+% ---------- Вёрстка ----------
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\setlist{nosep}
+\usepackage{indentfirst}       % абзацный отступ после заголовка, как принято в русском
+
+% ---------- Математика ----------
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{thmtools}          % \declaretheorem: корректные имена в \cref при общем счётчике
+\usepackage{mathtools}
+\usepackage{bm}
+
+% ---------- Графика ----------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ---------- Цвета и рамки ----------
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+
+% ---------- Ссылки (подключать последними) ----------
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = blue!60!black,
+  urlcolor   = blue!60!black,
+  citecolor  = green!40!black,
+  pdftitle   = {Математическая статистика. Конспект лекций},
+}
+\usepackage[nameinlink]{cleveref}

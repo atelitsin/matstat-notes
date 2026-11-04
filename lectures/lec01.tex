@@ -1,0 +1,146 @@
+% =====================================================================
+%  Лекция 1. Основные понятия математической статистики
+%  Дата: 2026-11-04
+% =====================================================================
+\section{Основные понятия}
+\label{lec:01}
+
+\subsection{Статистическая модель}
+
+В теории вероятностей распределение случайной величины считается известным,
+и по нему вычисляются вероятности событий. В математической статистике
+задача обратная: распределение известно лишь с точностью до параметра,
+а судить о нём нужно по наблюдениям.
+
+\begin{definition}
+  \emph{Выборкой} объёма $n$ называется набор $\sample$ независимых
+  одинаково распределённых случайных величин с функцией распределения $F$:
+  $\sample \iid F$.
+\end{definition}
+
+\begin{definition}
+  \emph{Параметрической статистической моделью} называется семейство
+  распределений $\{\Pt : \theta \in \Th\}$, где $\Th \subseteq \R^k$~---
+  параметрическое множество.
+\end{definition}
+
+\begin{example}
+  Число бракованных деталей в партии: $X_i \iid \Bern(p)$, $\Th = [0, 1]$.
+  Время безотказной работы прибора: $X_i \iid \Exp(\lambda)$, $\Th = (0, +\infty)$.
+\end{example}
+
+\subsection{Статистики и оценки}
+
+\begin{definition}
+  \emph{Статистикой} называется любая измеримая функция $T(\sample)$ от выборки,
+  не зависящая от неизвестного параметра $\theta$.
+  Статистика, принимающая значения в $\Th$, называется \emph{оценкой} параметра
+  и обозначается $\est\theta = \est\theta(\sample)$.
+\end{definition}
+
+Основные примеры~--- выборочные моменты:
+\begin{equation}
+  \label{eq:sample-moments}
+  \Xbar = \frac{1}{n} \sum_{i=1}^{n} X_i,
+  \qquad
+  S^2 = \frac{1}{n} \sum_{i=1}^{n} \bigl(X_i - \Xbar\bigr)^2.
+\end{equation}
+
+\begin{definition}
+  Оценка $\est\theta$ называется
+  \begin{itemize}
+    \item \emph{несмещённой}, если $\Et \est\theta = \theta$ для всех $\theta \in \Th$;
+    \item \emph{состоятельной}, если $\est\theta \toP \theta$ при $n \to \infty$
+          для всех $\theta \in \Th$;
+    \item \emph{сильно состоятельной}, если $\est\theta \toas \theta$.
+  \end{itemize}
+\end{definition}
+
+\begin{proposition}
+  \label{prop:xbar}
+  Пусть $\Et X_1 = \mu(\theta)$ конечно. Тогда $\Xbar$~--- несмещённая и сильно
+  состоятельная оценка $\mu(\theta)$.
+\end{proposition}
+
+\begin{proof}
+  Несмещённость следует из линейности матожидания:
+  $\Et \Xbar = \frac1n \sum_{i=1}^n \Et X_i = \mu(\theta)$.
+  Сильная состоятельность~--- это в точности усиленный закон больших чисел.
+\end{proof}
+
+\begin{proposition}
+  \label{prop:s2}
+  Если $\Dt X_1 = \sigma^2 < \infty$, то $\Et S^2 = \frac{n-1}{n}\,\sigma^2$,
+  т.\,е. оценка $S^2$ из~\cref{eq:sample-moments} смещена.
+\end{proposition}
+
+\begin{proof}
+  Заметим, что $\sum_{i}(X_i - \Xbar)^2 = \sum_i X_i^2 - n\Xbar^2$. Тогда
+  \[
+    \Et S^2
+    = \Et X_1^2 - \Et \Xbar^2
+    = \bigl(\sigma^2 + \mu^2\bigr) - \Bigl(\frac{\sigma^2}{n} + \mu^2\Bigr)
+    = \frac{n-1}{n}\,\sigma^2. \qedhere
+  \]
+\end{proof}
+
+\begin{corollary}
+  Исправленная выборочная дисперсия
+  $s^2 = \frac{n}{n-1} S^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i - \Xbar)^2$
+  является несмещённой оценкой $\sigma^2$.
+\end{corollary}
+
+\begin{keybox}[Итог лекции]
+  \begin{itemize}
+    \item $\Xbar$~--- несмещённая и сильно состоятельная оценка матожидания
+          (\cref{prop:xbar});
+    \item $S^2$ смещена, а $s^2 = \frac{n}{n-1} S^2$~--- нет (\cref{prop:s2}).
+  \end{itemize}
+\end{keybox}
+
+\subsection{Эмпирическая функция распределения}
+
+\begin{definition}
+  \emph{Эмпирической функцией распределения} называется
+  \[
+    \est F_n(x) = \frac{1}{n} \sum_{i=1}^n \Ind{X_i \le x}, \qquad x \in \R.
+  \]
+\end{definition}
+
+При каждом фиксированном $x$ величина $n \est F_n(x)$ имеет распределение
+$\Bin\bigl(n, F(x)\bigr)$, поэтому $\est F_n(x)$~--- несмещённая и сильно
+состоятельная оценка $F(x)$. Более того, по теореме Гливенко--Кантелли
+сходимость равномерна: $\sup_x \abs{\est F_n(x) - F(x)} \toas 0$.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.7\textwidth, height=5cm,
+      xmin=-0.5, xmax=4.5, ymin=0, ymax=1.1,
+      axis lines=left, xlabel={$x$}, ylabel={$\est F_n(x)$},
+      ytick={0, 0.2, 0.4, 0.6, 0.8, 1},
+    ]
+      % выборка: 0.3, 1.1, 1.8, 2.6, 3.5 (n = 5)
+      \addplot[very thick, blue!70!black, domain=-0.5:0.3] {0};
+      \addplot[very thick, blue!70!black, domain=0.3:1.1] {0.2};
+      \addplot[very thick, blue!70!black, domain=1.1:1.8] {0.4};
+      \addplot[very thick, blue!70!black, domain=1.8:2.6] {0.6};
+      \addplot[very thick, blue!70!black, domain=2.6:3.5] {0.8};
+      \addplot[very thick, blue!70!black, domain=3.5:4.5] {1};
+      \addplot[only marks, mark=*, blue!70!black]
+        coordinates {(0.3,0.2) (1.1,0.4) (1.8,0.6) (2.6,0.8) (3.5,1)};
+      \addplot[dashed, red!70!black, domain=0:4.5, samples=100] {1 - exp(-x/2)};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Эмпирическая функция распределения для выборки объёма $n = 5$
+           и истинная функция распределения $\Exp(1/2)$ (пунктир).}
+  \label{fig:ecdf}
+\end{figure}
+
+\begin{exercise}
+  Найдите $\D \est F_n(x)$ и покажите, что
+  \[
+    \sqrt{n}\bigl(\est F_n(x) - F(x)\bigr) \tod \Norm\bigl(0,\, F(x)(1 - F(x))\bigr).
+  \]
+\end{exercise}

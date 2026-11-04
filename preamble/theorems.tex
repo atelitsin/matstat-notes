@@ -1,0 +1,33 @@
+% Сквозная нумерация внутри раздела (лекции): Теорема 1.1, Определение 1.2, ...
+% refname задаёт, как окружение называется в \cref{...}.
+\declaretheorem[name=Теорема, numberwithin=section,
+  refname={теорема,теоремы}, Refname={Теорема,Теоремы}]{theorem}
+\declaretheorem[name=Лемма, sibling=theorem,
+  refname={лемма,леммы}, Refname={Лемма,Леммы}]{lemma}
+\declaretheorem[name=Утверждение, sibling=theorem,
+  refname={утверждение,утверждения}, Refname={Утверждение,Утверждения}]{proposition}
+\declaretheorem[name=Следствие, sibling=theorem,
+  refname={следствие,следствия}, Refname={Следствие,Следствия}]{corollary}
+
+\declaretheorem[name=Определение, style=definition, sibling=theorem,
+  refname={определение,определения}, Refname={Определение,Определения}]{definition}
+\declaretheorem[name=Пример, style=definition, sibling=theorem,
+  refname={пример,примеры}, Refname={Пример,Примеры}]{example}
+\declaretheorem[name=Упражнение, style=definition, sibling=theorem,
+  refname={упражнение,упражнения}, Refname={Упражнение,Упражнения}]{exercise}
+
+\declaretheorem[name=Замечание, style=remark, numbered=no]{remark}
+\declaretheorem[name=Примечание, style=remark, numbered=no]{note}
+
+\renewcommand{\proofname}{Доказательство}
+
+% Прочие названия для \cref
+\crefformat{equation}{(#2#1#3)}
+\crefname{section}{лекция}{лекции}
+\crefname{figure}{рис.}{рис.}
+
+% Рамка для ключевых формул/фактов
+\newtcolorbox{keybox}[1][]{
+  colback=blue!3, colframe=blue!50!black, boxrule=0.6pt, arc=2pt,
+  fonttitle=\bfseries, title={#1}
+}

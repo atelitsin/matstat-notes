@@ -1,148 +1,156 @@
 % =====================================================================
-%  Лекция 1. Основные понятия математической статистики
-%  Дата: 2026-11-04
+%  Лекция 1.
+%  Дата: 2026-09-24
 % =====================================================================
 \section{Основные понятия}
 \label{lec:01}
 
-\subsection{Статистическая модель}
+\subsection{Выборочное пространство}
 
-В теории вероятностей распределение случайной величины считается известным,
-и по нему вычисляются вероятности событий. В математической статистике
-задача обратная: распределение известно лишь с точностью до параметра,
-а судить о нём нужно по наблюдениям.
+Рассмотрим случайную величину
+\[
+  \xi \colon \Omega \to \R.
+\]
+Рассмотрим вероятностное пространство
+\[
+  \bigl(\R,\, \mathcal{B}(\R),\, \P_{\xi}\bigr),
+\]
+где
+\begin{itemize}
+  \item $\mathcal{B}(\R)$~--- борелевская $\sigma$-алгебра на~$\R$;
+  \item $\P_\xi(A)$~--- вероятностная мера такая, что
+        $\P_\xi\bigl((-\infty, x]\bigr) = F(x) = \P(\xi \le x)$.
+\end{itemize}
+
+\medskip
+
+Если говорить о наборе случайных величин $(\xi_1, \ldots, \xi_n)$, то вероятностное
+пространство определяется как
+\[
+  \bigl(\R^n,\, \mathcal{B}(\R^n),\, \P_{\xi}\bigr),
+\]
+где
+\begin{itemize}
+  \item $\mathcal{B}(\R^n)$~--- борелевская $\sigma$-алгебра на~$\R^n$;
+  \item $\P_\xi$~--- совместное распределение случайных величин $(\xi_1, \ldots, \xi_n)$:
+        \[
+          \P_\xi\bigl((-\infty, x_1] \times \cdots \times (-\infty, x_n]\bigr)
+          = F(x_1, \ldots, x_n)
+          = \P(\xi_1 \le x_1, \ldots, \xi_n \le x_n).
+        \]
+\end{itemize}
+
+% \begin{definition}
+%   \emph{Выборочным пространством} называется вероятностное пространство
+%   $\bigl(\R^n,\, \mathcal{B}(\R^n),\, \P_{\xi}\bigr)$.
+% \end{definition}
 
 \begin{definition}
-  \emph{Выборкой} объёма $n$ называется набор $\sample$ независимых
-  одинаково распределённых случайных величин с функцией распределения $F$:
-  $\sample \iid F$.
+  \emph{Выборкой} $X_{[n]} = (X_1, \ldots, X_n)$ размера~$n$ называется совокупность
+  взаимно независимых реализаций случайной величины~$\xi$, где $X_i$~--- числовая
+  реализация случайной величины~$\xi_i$ в $i$-м эксперименте.
+\end{definition}
+
+Совместной функцией распределения
+$F_{X_{[n]}}(x_1, \ldots, x_n) = F_\xi(x_1) \cdots F_\xi(x_n)$
+однозначно определяется совместная вероятность $\P_{X_{[n]}}$.
+
+\begin{definition}
+  \emph{Генеральной совокупностью} называется множество всех возможных значений случайной величины $\xi$.
+\end{definition}
+
+Получили выборочное пространство:
+\begin{definition}
+  \emph{Выборочным пространством} называется вероятностное пространство
+  $\bigl(\R^n,\, \mathcal{B}(\R^n),\, \P_{X_{[n]}}\bigr)$.
+\end{definition}
+
+\begin{reminder}
+  Функция $f \colon \R^n \to \R^m$ называется \emph{борелевской}, если
+  $\forall B \in \mathcal{B}(\R^m)$ выполнено $f^{-1}(B) \in \mathcal{B}(\R^n)$.
+\end{reminder}
+
+\begin{definition}
+  \emph{Статистикой} называется любая борелевская функция, заданная на
+  выборочном пространстве.
+\end{definition}
+
+\subsection{Эмпирическая функция распределения. Гистограмма}
+
+Пусть задана генеральная совокупность случайной величины~$\xi$
+и выборка размера~$n$: $X_{[n]} = (X_1, \ldots, X_n)$.
+\begin{definition}
+  \emph{Эмпирическим распределением} называется вероятностная мера,
+  определённая следующим образом:
+  \[
+    \Pemp(B) = \P_{X_{[n]}}^{*}(B) = \frac{\nu(B)}{n},
+  \]
+  где $\nu(B)$~--- количество элементов выборки, попавших в борелевское множество
+  $B \in \mathcal{B}(\R)$.
 \end{definition}
 
 \begin{definition}
-  \emph{Параметрической статистической моделью} называется семейство
-  распределений $\{\Pt : \theta \in \Th\}$, где $\Th \subseteq \R^k$~---
-  параметрическое множество.
+  \emph{Эмпирической функцией распределения} называется функция
+  \[
+    F_n^{*}(x) = \Pemp\bigl((-\infty, x]\bigr)
+    = \frac{\nu\bigl((-\infty, x]\bigr)}{n}, \qquad x \in \R.
+  \]
 \end{definition}
 
-\begin{example}
-  Число бракованных деталей в партии: $X_i \iid \Bern(p)$, $\Th = [0, 1]$.
-  Время безотказной работы прибора: $X_i \iid \Exp(\lambda)$, $\Th = (0, +\infty)$.
-\end{example}
-
-\subsection{Статистики и оценки}
+Введём порядковые статистики:
+\begin{align*}
+  X_{(1)} &= \min(X_1, \ldots, X_n), \\
+  X_{(2)} &= \min\bigl(\{X_1, \ldots, X_n\} \setminus \{X_{(1)}\}\bigr), \\
+          &\;\;\vdots \\
+  X_{(n)} &= \max(X_1, \ldots, X_n).
+\end{align*}
+Очевидно, что $X_{(1)} \le X_{(2)} \le \ldots \le X_{(n)}$.
 
 \begin{definition}
-  \emph{Статистикой} называется любая измеримая функция $T(\sample)$ от выборки,
-  не зависящая от неизвестного параметра $\theta$.
-  Статистика, принимающая значения в $\Th$, называется \emph{оценкой} параметра
-  и обозначается $\est\theta = \est\theta(\sample)$.
+  \emph{Вариационным рядом} называется последовательность порядковых статистик
+  \[
+    X_{(1)} \le X_{(2)} \le \ldots \le X_{(n)}.
+  \]
 \end{definition}
 
-Основные примеры~--- выборочные моменты:
+Если предположить, что все элементы вариационного ряда различны,
+то есть $X_{(1)} < X_{(2)} < \ldots < X_{(n)}$, то эмпирическую
+функцию распределения можно построить следующим образом:
 \begin{equation}
-  \label{eq:sample-moments}
-  \Xbar = \frac{1}{n} \sum_{i=1}^{n} X_i,
-  \qquad
-  S^2 = \frac{1}{n} \sum_{i=1}^{n} \bigl(X_i - \Xbar\bigr)^2.
+  \label{eq:ecdf}
+  F_n^*(x) =
+  \begin{cases}
+    0,           & \text{если } x < X_{(1)}; \\
+    \frac{1}{n}, & \text{если } X_{(1)} \le x < X_{(2)}; \\
+    \frac{2}{n}, & \text{если } X_{(2)} \le x < X_{(3)}; \\
+    \ldots \\
+    \frac{k}{n}, & \text{если } X_{(k)} \le x < X_{(k+1)}; \\
+    \ldots \\
+    1,           & \text{если } x \ge X_{(n)}.
+  \end{cases}
 \end{equation}
 
-\begin{definition}
-  Оценка $\est\theta$ называется
-  \begin{itemize}
-    \item \emph{несмещённой}, если $\Et \est\theta = \theta$ для всех $\theta \in \Th$;
-    \item \emph{состоятельной}, если $\est\theta \toP \theta$ при $n \to \infty$
-          для всех $\theta \in \Th$;
-    \item \emph{сильно состоятельной}, если $\est\theta \toas \theta$.
-  \end{itemize}
-\end{definition}
+Теперь можно построить гистограмму. Возьмём интервал $(a, b)$, где $a < X_{(1)}$ и $b > X_{(n)}$,
+и разобьём его точками
+$a = a_0 < a_1 < \ldots < a_m = b$, где $m \le n$.
+Пусть $\nu_i$~--- количество элементов выборки, попавших в интервал $(a_{i-1}, a_{i}]$.
+Тогда $\nu_1 + \nu_2 + \ldots + \nu_m = n$. Положим
+\[
+  l_i = a_i - a_{i-1}, \qquad h_i = \frac{\nu_i}{n l_i}, \qquad i = 1, \ldots, m.
+\]
 
-\begin{proposition}
-  \label{prop:xbar}
-  Пусть $\Et X_1 = \mu(\theta)$ конечно. Тогда $\Xbar$~--- несмещённая и сильно
-  состоятельная оценка $\mu(\theta)$.
-\end{proposition}
+Получаем гистограмму:
+\begin{equation}
+  \label{eq:histogram}
+  f_n^{*}(x) =
+  \begin{cases}
+    h_1, & \text{если } x \in (a_0, a_1]; \\
+    h_2, & \text{если } x \in (a_1, a_2]; \\
+    \ldots \\
+    h_m, & \text{если } x \in (a_{m-1}, a_m].
+  \end{cases}
+\end{equation}
 
-\begin{proof}
-  Несмещённость следует из линейности матожидания:
-  \[
-    \Et \Xbar = \frac1n \sum_{i=1}^n \Et X_i = \mu(\theta).
-  \]
-  Сильная состоятельность~--- это в точности усиленный закон больших чисел.
-\end{proof}
-
-\begin{proposition}
-  \label{prop:s2}
-  Если $\Dt X_1 = \sigma^2 < \infty$, то $\Et S^2 = \frac{n-1}{n}\,\sigma^2$,
-  т.\,е. оценка $S^2$ из~\cref{eq:sample-moments} смещена.
-\end{proposition}
-
-\begin{proof}
-  Заметим, что $\sum_{i}(X_i - \Xbar)^2 = \sum_i X_i^2 - n\Xbar^2$. Тогда
-  \[
-    \Et S^2
-    = \Et X_1^2 - \Et \Xbar^2
-    = \bigl(\sigma^2 + \mu^2\bigr) - \Bigl(\frac{\sigma^2}{n} + \mu^2\Bigr)
-    = \frac{n-1}{n}\,\sigma^2. \qedhere
-  \]
-\end{proof}
-
-\begin{corollary}
-  Исправленная выборочная дисперсия
-  $s^2 = \frac{n}{n-1} S^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i - \Xbar)^2$
-  является несмещённой оценкой $\sigma^2$.
-\end{corollary}
-
-\begin{keybox}[Итог лекции]
-  \begin{itemize}
-    \item $\Xbar$~--- несмещённая и сильно состоятельная оценка матожидания
-          (\cref{prop:xbar});
-    \item $S^2$ смещена, а $s^2 = \frac{n}{n-1} S^2$~--- нет (\cref{prop:s2}).
-  \end{itemize}
-\end{keybox}
-
-\subsection{Эмпирическая функция распределения}
-
-\begin{definition}
-  \emph{Эмпирической функцией распределения} называется
-  \[
-    \est F_n(x) = \frac{1}{n} \sum_{i=1}^n \Ind{X_i \le x}, \qquad x \in \R.
-  \]
-\end{definition}
-
-При каждом фиксированном $x$ величина $n \est F_n(x)$ имеет распределение
-$\Bin\bigl(n, F(x)\bigr)$, поэтому $\est F_n(x)$~--- несмещённая и сильно
-состоятельная оценка $F(x)$. Более того, по теореме Гливенко--Кантелли
-сходимость равномерна: $\sup_x \abs{\est F_n(x) - F(x)} \toas 0$.
-
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=0.7\textwidth, height=5cm,
-      xmin=-0.5, xmax=4.5, ymin=0, ymax=1.1,
-      axis lines=left, xlabel={$x$}, ylabel={$\est F_n(x)$},
-      ytick={0, 0.2, 0.4, 0.6, 0.8, 1},
-    ]
-      % выборка: 0.3, 1.1, 1.8, 2.6, 3.5 (n = 5)
-      \addplot[very thick, blue!70!black, domain=-0.5:0.3] {0};
-      \addplot[very thick, blue!70!black, domain=0.3:1.1] {0.2};
-      \addplot[very thick, blue!70!black, domain=1.1:1.8] {0.4};
-      \addplot[very thick, blue!70!black, domain=1.8:2.6] {0.6};
-      \addplot[very thick, blue!70!black, domain=2.6:3.5] {0.8};
-      \addplot[very thick, blue!70!black, domain=3.5:4.5] {1};
-      \addplot[only marks, mark=*, blue!70!black]
-        coordinates {(0.3,0.2) (1.1,0.4) (1.8,0.6) (2.6,0.8) (3.5,1)};
-      \addplot[dashed, red!70!black, domain=0:4.5, samples=100] {1 - exp(-x/2)};
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Эмпирическая функция распределения для выборки объёма $n = 5$
-           и истинная функция распределения $\Exp(1/2)$ (пунктир).}
-  \label{fig:ecdf}
-\end{figure}
-
-\begin{exercise}
-  Найдите $\D \est F_n(x)$ и покажите, что
-  \[
-    \sqrt{n}\bigl(\est F_n(x) - F(x)\bigr) \tod \Norm\bigl(0,\, F(x)(1 - F(x))\bigr).
-  \]
-\end{exercise}
+Гистограмма $f_n^{*}(x)$~--- эмпирический аналог плотности распределения. Диаграмму
+относительных частот можно построить аналогично, убрав при вычислении $h_i$ деление на $l_i$.
+Если в гистограмме убрать $n$, то получим гистограмму частот.

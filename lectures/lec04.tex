@@ -1,11 +1,329 @@
 % =====================================================================
-%  Лекция 3. Статистика Пирсона
+%  Лекция 4. Статистика Пирсона. Предельное распределение статистик первого типа.
+%  Критерий согласия Пирсона
 %  Дата: 2026-10-08
 % =====================================================================
-\section{Статистика Пирсона (хи-квадрат)}
+\section[Статистика Пирсона. Критерий согласия Пирсона]%
+  {Статистика Пирсона (хи-квадрат).
+   Предельное распределение статистик первого типа.
+   Критерий согласия Пирсона}
 \label{lec:04}
 
 % Структура лекции: \subsection — тема, \subsubsection — её подтемы.
 \subsection{Статистика Пирсона}
 \label{lec04:pearson-statistic}
 
+Рассмотрим генеральную совокупность~$\xi$ с функцией распределения $F_\xi(x)$
+и выборку $X_{[n]} = (X_1, \ldots, X_n)$ из неё.
+
+Разобьём числовую ось точками
+\[
+  -\infty = a_0 < a_1 < \ldots < a_r = +\infty
+\]
+на $r$ промежутков
+\[
+  \Delta_1 = (-\infty, a_1], \quad \Delta_2 = (a_1, a_2], \quad \ldots, \quad
+  \Delta_r = (a_{r-1}, +\infty).
+\]
+Пусть $n_i = \nu(\Delta_i)$~--- число элементов выборки, попавших в промежуток~$\Delta_i$.
+
+Пусть $p_i = \P\{\xi \in \Delta_i\} = F_\xi(a_i) - F_\xi(a_{i-1})$~--- вероятность попадания
+случайной величины~$\xi$ в промежуток~$\Delta_i$, $\sum_{i=1}^{r} p_i = 1$.
+
+\begin{definition}
+  \emph{Статистиками хи-квадрат}, или \emph{статистиками Пирсона}, называются статистики вида
+  \[
+    \chi^2(X_{[n]}) = \sum_{i=1}^{r} \frac{(n_i - n p_i)^2}{n p_i}.
+  \]
+\end{definition}
+
+Покажем, что статистика Пирсона может быть представлена в виде статистики первого типа:
+\begin{align}
+  \chi^2
+  &= \sum_{i=1}^{r} \frac{(n_i - np_i)^2}{np_i}
+   = n \sum_{i=1}^{r} \biggl(\frac{1}{\sqrt{p_i}}\,\frac{n_i}{n} - \sqrt{p_i}\biggr)^{\!2} \notag \\
+  &= n \sum_{i=1}^{r} \biggl(\frac{1}{n} \sum_{j=1}^{n} \frac{1}{\sqrt{p_i}}\,
+     \Ind{X_j \in \Delta_i} - \sqrt{p_i}\biggr)^{\!2}.
+  \label{lec04:eq:chi2-sum}
+\end{align}
+Пусть $g \colon \R \to \R^r$, $g(x) = \bigl(g_1(x), \ldots, g_r(x)\bigr)$, где
+$g_i(x) = \frac{1}{\sqrt{p_i}} \Ind{x \in \Delta_i}$.
+Тогда \cref{lec04:eq:chi2-sum} можно переписать в виде
+\[
+  \chi^2 = n \sum_{i=1}^{r} \biggl(\frac{1}{n} \sum_{j=1}^{n} g_i(X_j) - \sqrt{p_i}\biggr)^{\!2}.
+\]
+В качестве $h$ возьмём функцию
+\[
+  h \colon \R^r \to \R, \qquad h(t_1, \ldots, t_r) = \sum_{i=1}^{r} \bigl(t_i - \sqrt{p_i}\bigr)^2.
+\]
+Внутренние суммы~--- это компоненты вектора $\frac1n \sum_{j=1}^n g(X_j)$, поэтому
+\[
+  \chi^2(X_{[n]}) = n \cdot h\biggl(\frac{1}{n} \sum_{j=1}^{n} g(X_j)\biggr) = n \cdot S(X_{[n]}),
+\]
+где $S(X_{[n]}) = h\bigl(\frac1n \sum_{j=1}^n g(X_j)\bigr)$.
+
+\begin{proposition}
+  \label{lec04:pearson-first-type}
+  Пусть $p_i > 0$, $i = 1, \ldots, r$. Тогда $\chi^2(X_{[n]}) = n \cdot S(X_{[n]})$,
+  где $S(X_{[n]})$~--- статистика первого типа с функциями $g$ и $h$, определёнными выше.
+\end{proposition}
+
+\begin{proof}
+  Проверим условия из определения статистики первого типа.
+  \begin{itemize}
+    \item $g$ борелевская: каждая компонента $g_i$~--- индикатор борелевского
+          множества~$\Delta_i$, умноженный на константу $\frac{1}{\sqrt{p_i}}$
+          (здесь нужно $p_i > 0$).
+    \item $a = \E g(\xi)$ существует и конечна: $g_i$ ограничены, и
+          \[
+            a_i = \E g_i(\xi) = \frac{1}{\sqrt{p_i}}\, \P\{\xi \in \Delta_i\}
+                = \frac{p_i}{\sqrt{p_i}} = \sqrt{p_i},
+            \qquad a = \bigl(\sqrt{p_1}, \ldots, \sqrt{p_r}\bigr).
+          \]
+          Здесь $\E\Ind{\xi \in \Delta_i} = 1 \cdot \P\{\xi \in \Delta_i\} + 0 \cdot \P\{\xi \notin \Delta_i\}
+          = \P\{\xi \in \Delta_i\}$: индикатор принимает только значения $0$ и~$1$.
+    \item $h$~--- многочлен, поэтому она борелевская и непрерывна всюду, в том числе
+          в точке~$a$.
+  \end{itemize}
+  Равенство $\chi^2(X_{[n]}) = n \cdot S(X_{[n]})$ получено выше.
+\end{proof}
+
+\begin{remark}
+  В точке~$a$ функция $h$ обращается в ноль: $h(a) = \sum_{i=1}^r (\sqrt{p_i} - \sqrt{p_i})^2 = 0$.
+  Поэтому по теореме~\ref{lec03:first-type-conv} $S(X_{[n]}) \toas 0$, а сама $\chi^2 = n \cdot S$
+  к нулю не стремится~--- её предельное распределение находится отдельно.
+\end{remark}
+
+\subsection{Предельное распределение статистик первого типа}
+\label{lec04:first-type-limit}
+
+Теорема~\ref{lec03:first-type-conv} говорит, куда сходится статистика первого типа:
+$S(X_{[n]}) \toas h(a)$. Следующая теорема описывает, как распределено отклонение
+$S(X_{[n]}) - h(a)$ при больших~$n$.
+
+Обозначения: $a = \E g(\xi) \in \R^m$; $h'(a) = \bigl(\frac{\partial h}{\partial t_1}, \ldots,
+\frac{\partial h}{\partial t_m}\bigr)\big|_{t = a}$~--- градиент $h$ в точке~$a$;
+$h''(a) = \bigl(\frac{\partial^2 h}{\partial t_k \partial t_l}\bigr)\big|_{t = a}$~--- матрица
+Гессе $h$ в точке~$a$; $D g(\xi)$~--- ковариационная матрица случайного вектора $g(\xi)$.
+
+\begin{theorem}
+  \label{lec04:first-type-limit-thm}
+  Пусть $S(X_{[n]}) = h\bigl(\frac1n \sum_{i=1}^n g(X_i)\bigr)$~--- статистика первого типа,
+  $g \colon \R \to \R^m$, $h \colon \R^m \to \R$~--- борелевские функции, и ковариационная
+  матрица $D g(\xi)$ существует. Пусть $\zeta = (\zeta_1, \ldots, \zeta_m)$~--- случайный
+  вектор, $\zeta \sim \Norm\bigl(0, D g(\xi)\bigr)$. Тогда:
+  \begin{enumerate}
+    \item если существует $h'(a)$, то
+          \[
+            \sqrt{n}\bigl(S(X_{[n]}) - h(a)\bigr) \tod h'(a)\, \zeta^T
+            \quad \textup{при } n \to \infty;
+          \]
+    \item если $h'(a) = 0$ и существует $h''(a)$, то
+          \[
+            n\bigl(S(X_{[n]}) - h(a)\bigr) \tod \frac12\, \zeta\, h''(a)\, \zeta^T
+            \quad \textup{при } n \to \infty.
+          \]
+  \end{enumerate}
+\end{theorem}
+Принимаем без доказательства.
+
+\subsection{Предельное распределение статистики Пирсона}
+\label{lec04:chi2-limit}
+
+\begin{definition}
+  Пусть $\eta_1, \ldots, \eta_k$~--- независимые случайные величины,
+  $\eta_i \sim \Norm(0, 1)$. Распределение случайной величины
+  \[
+    \eta_1^2 + \ldots + \eta_k^2
+  \]
+  называется \emph{распределением хи-квадрат} (\emph{распределением Пирсона})
+  с $k$~степенями свободы и обозначается $\chi^2_k$.
+\end{definition}
+
+Обозначение $\chi^2$ используется в двух смыслах: $\chi^2(X_{[n]})$~--- статистика
+Пирсона (функция от выборки), $\chi^2_k$~--- распределение.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.65\textwidth, height=5cm,
+      xmin=0, xmax=12, ymin=0, ymax=0.52,
+      axis lines=left, xlabel={$x$}, ylabel={плотность},
+      legend style={draw=none, font=\small}, legend cell align=left,
+    ]
+      \addplot[thick, blue!70!black, domain=0:12, samples=150] {0.5*exp(-x/2)};
+      \addlegendentry{$k = 2$}
+      \addplot[thick, red!70!black, domain=0:12, samples=150] {0.3989*sqrt(x)*exp(-x/2)};
+      \addlegendentry{$k = 3$}
+      \addplot[thick, green!50!black, domain=0:12, samples=150] {0.1330*x^1.5*exp(-x/2)};
+      \addlegendentry{$k = 5$}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Плотности распределения $\chi^2_k$ при $k = 2, 3, 5$.}
+  \label{lec04:fig:chi2-densities}
+\end{figure}
+
+Применим теорему~\ref{lec04:first-type-limit-thm} к статистике Пирсона
+$\chi^2(X_{[n]}) = n \cdot S(X_{[n]})$ (утверждение~\ref{lec04:pearson-first-type}).
+Для неё $h(t) = \sum_{i=1}^r (t_i - \sqrt{p_i})^2$ и $a_i = \sqrt{p_i}$, поэтому
+\[
+  h(a) = 0, \qquad
+  h'(a) = 2\bigl(a_1 - \sqrt{p_1}, \ldots, a_r - \sqrt{p_r}\bigr) = 0, \qquad
+  h''(a) = 2E_r,
+\]
+где $E_r$~--- единичная матрица порядка~$r$. Пункт~1 теоремы даёт вырожденный предел,
+поэтому работает пункт~2 (отсюда и множитель~$n$, а не~$\sqrt{n}$):
+\[
+  \chi^2(X_{[n]}) = n\bigl(S(X_{[n]}) - h(a)\bigr)
+  \tod \frac12\, \zeta\, (2E_r)\, \zeta^T = \zeta \zeta^T = \zeta_1^2 + \ldots + \zeta_r^2,
+  \qquad \zeta \sim \Norm\bigl(0, D g(\xi)\bigr).
+\]
+
+\begin{theorem}
+  \label{lec04:chi2-limit-thm}
+  Пусть $p_i > 0$, $i = 1, \ldots, r$. Тогда
+  \[
+    \chi^2(X_{[n]}) = \sum_{i=1}^{r} \frac{(n_i - n p_i)^2}{n p_i} \tod \tau,
+    \qquad \tau \sim \chi^2_{r-1}, \quad \textup{при } n \to \infty.
+  \]
+\end{theorem}
+
+\begin{remark}
+  Степеней свободы $r - 1$, а не~$r$: компоненты $\zeta_1, \ldots, \zeta_r$ не независимы
+  и не стандартные. Ковариационная матрица
+  $D g(\xi) = E_r - \sqrt{p}^{\,T} \sqrt{p}$, где $\sqrt{p} = (\sqrt{p_1}, \ldots, \sqrt{p_r})$,
+  вырождена, и $\sqrt{p_1}\,\zeta_1 + \ldots + \sqrt{p_r}\,\zeta_r = 0$ почти наверное.
+  Это следствие связи $n_1 + \ldots + n_r = n$: одна степень свободы теряется.
+  Ортогональным преобразованием сумма $\zeta_1^2 + \ldots + \zeta_r^2$ приводится к сумме
+  $r - 1$ квадратов независимых $\Norm(0, 1)$. Подробно~--- в учебнике Буре, Парилиной,
+  гл.~13, §4, теорема~4.1; на лекции принято без доказательства.
+\end{remark}
+
+\subsection{Критерий согласия Пирсона}
+\label{lec04:pearson-test}
+
+Зная предельное распределение статистики Пирсона, можно проверять гипотезы
+о распределении генеральной совокупности.
+
+\emph{Статистическая гипотеза}~--- любое предположение о законе распределения
+генеральной совокупности. \emph{Статистический критерий}~--- правило, по которому
+гипотеза проверяется. \emph{Критерий согласия} проверяет гипотезу о виде функции
+распределения~$F_\xi$.
+
+Рассмотрим \emph{основную} (\emph{нулевую}) гипотезу и \emph{альтернативную} гипотезу
+\[
+  H_0\colon F_\xi(x) = F_0(x), \qquad H_1\colon F_\xi(x) \ne F_0(x),
+\]
+где $F_0$~--- конкретная, полностью заданная функция распределения. Гипотезы бывают
+\emph{простыми} (распределение задано полностью, как здесь) и \emph{сложными}
+(распределение известно с точностью до параметров).
+
+Для проверки $H_0$ в статистику Пирсона подставляем вероятности, вычисленные
+по гипотетическому распределению:
+\[
+  p_i^0 = F_0(a_i) - F_0(a_{i-1}), \qquad
+  \chi^2(X_{[n]}) = \sum_{i=1}^{r} \frac{(n_i - n p_i^0)^2}{n p_i^0}
+  = n \sum_{i=1}^{r} \biggl(\frac{n_i}{n\sqrt{p_i^0}} - \sqrt{p_i^0}\biggr)^{\!2}.
+\]
+
+\subsubsection{Поведение статистики при \texorpdfstring{$H_0$}{H0} и при \texorpdfstring{$H_1$}{H1}}
+
+По-прежнему $\chi^2(X_{[n]}) = n \cdot S(X_{[n]})$, где $S$~--- статистика первого типа,
+и по теореме~\ref{lec03:first-type-conv} $S(X_{[n]}) \toas h(a)$.
+\begin{itemize}
+  \item Если верна $H_0$, то $\P\{\xi \in \Delta_i\} = p_i^0$, $h(a) = 0$, и
+        $S(X_{[n]}) \toas 0$. Сама же статистика $\chi^2(X_{[n]})$ к нулю \emph{не}
+        стремится: по теореме~\ref{lec04:chi2-limit-thm} $\chi^2(X_{[n]}) \tod \chi^2_{r-1}$.
+  \item Если верна $H_1$ и при этом $q_i = \P\{\xi \in \Delta_i\} \ne p_i^0$ хотя бы
+        для одного~$i$, то $a_i = q_i / \sqrt{p_i^0}$ и
+        \[
+          h(a) = \sum_{i=1}^{r} \biggl(\frac{q_i}{\sqrt{p_i^0}} - \sqrt{p_i^0}\biggr)^{\!2}
+               = \sum_{i=1}^{r} \frac{(q_i - p_i^0)^2}{p_i^0} > 0,
+        \]
+        поэтому $S(X_{[n]}) \toas h(a) > 0$ и $\chi^2(X_{[n]}) = n \cdot S(X_{[n]}) \toas +\infty$.
+\end{itemize}
+Итак, при $H_0$ значения статистики <<умеренные>>, а при $H_1$ она неограниченно растёт.
+Поэтому $H_0$ отвергают, если $\chi^2(X_{[n]})$ превосходит некоторый порог.
+
+\begin{remark}
+  Критерий <<видит>> только вероятности промежутков: если $F_\xi \ne F_0$, но
+  $\P\{\xi \in \Delta_i\} = p_i^0$ для всех~$i$, то отличие обнаружено не будет.
+\end{remark}
+
+\subsubsection{Выбор порога и p-value}
+
+Пусть $\eta \sim \chi^2_{r-1}$. \emph{Уровень значимости}~$\alpha$~--- вероятность
+отвергнуть $H_0$, когда она верна (\emph{ошибка первого рода}). Порог выбирают так,
+чтобы при верной $H_0$ статистика превосходила его с вероятностью~$\alpha$; для этого
+берут \emph{квантиль} $\chi^2_{1-\alpha,\, r-1}$ распределения $\chi^2_{r-1}$ уровня $1 - \alpha$:
+\[
+  \P\bigl\{\eta \le \chi^2_{1-\alpha,\, r-1}\bigr\} = F_\eta\bigl(\chi^2_{1-\alpha,\, r-1}\bigr) = 1 - \alpha.
+\]
+\emph{Критическая область}~--- множество значений статистики, при которых $H_0$ отвергается.
+Здесь она правосторонняя: $\bigl(\chi^2_{1-\alpha,\, r-1}, +\infty\bigr)$.
+
+\begin{remark}
+  В других критериях критическая область бывает и двусторонней: тогда отвергают
+  как слишком большие, так и слишком малые значения статистики. В критерии Пирсона
+  малые значения против $H_0$ не свидетельствуют, поэтому область односторонняя.
+\end{remark}
+
+\begin{definition}
+  Пусть $\chi^2(X_{[n]})$~--- вычисленное по выборке значение статистики.
+  \emph{p-value}~--- вероятность того, что $\eta \sim \chi^2_{r-1}$ превзойдёт это значение:
+  \[
+    \text{p-value} = \P\bigl\{\eta > \chi^2(X_{[n]})\bigr\} = 1 - F_\eta\bigl(\chi^2(X_{[n]})\bigr).
+  \]
+\end{definition}
+
+Геометрически и $\alpha$, и p-value~--- площади под плотностью $\chi^2_{r-1}$ справа от
+соответствующей точки (\cref{lec04:fig:chi2-test}). Поэтому
+$\chi^2(X_{[n]}) > \chi^2_{1-\alpha,\, r-1}$ тогда и только тогда, когда p-value~$< \alpha$.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.7\textwidth, height=5cm,
+      xmin=0, xmax=14, ymin=0, ymax=0.2,
+      axis lines=left, xlabel={$x$}, ylabel={плотность $\chi^2_{r-1}$},
+      xtick={4, 9.488}, xticklabels={$\chi^2(X_{[n]})$, $\chi^2_{1-\alpha,\, r-1}$},
+      ytick=\empty,
+    ]
+      % r - 1 = 4: плотность x e^{-x/2} / 4
+      \addplot[fill=gray!20, draw=none, domain=4:14, samples=80] {x*exp(-x/2)/4} \closedcycle;
+      \addplot[fill=red!45, draw=none, domain=9.488:14, samples=60] {x*exp(-x/2)/4} \closedcycle;
+      \addplot[thick, blue!70!black, domain=0:14, samples=150] {x*exp(-x/2)/4};
+      \node[font=\small] at (axis cs:11.6, 0.045) {$\alpha$};
+      \node[font=\small] at (axis cs:6.3, 0.025) {p-value};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Порог и p-value при $r - 1 = 4$: красная площадь~--- $\alpha$, вся закрашенная
+           площадь справа от $\chi^2(X_{[n]})$~--- p-value. Здесь p-value~$> \alpha$,
+           и $H_0$ не отвергается.}
+  \label{lec04:fig:chi2-test}
+\end{figure}
+
+\subsubsection{Схема проверки гипотезы}
+
+\begin{enumerate}
+  \item Сформулировать $H_0$ и~$H_1$.
+  \item Выбрать уровень значимости~$\alpha$~--- небольшое число (например, $0{,}05$ или $0{,}01$),
+        допустимую вероятность ошибки первого рода.
+  \item Выбрать промежутки $\Delta_1, \ldots, \Delta_r$, найти $p_1^0, \ldots, p_r^0$ и
+        вычислить значение статистики критерия $\chi^2(X_{[n]})$.
+  \item Найти квантиль $\chi^2_{1-\alpha,\, r-1}$.
+  \item Сравнить:
+        \begin{itemize}
+          \item если $\chi^2(X_{[n]}) > \chi^2_{1-\alpha,\, r-1}$, то $H_0$ отвергается
+                в пользу~$H_1$;
+          \item если $\chi^2(X_{[n]}) \le \chi^2_{1-\alpha,\, r-1}$, то оснований отвергнуть
+                $H_0$ нет.
+        \end{itemize}
+\end{enumerate}
+
+\begin{remark}
+  <<Нет оснований отвергнуть>> не означает, что $H_0$ верна: данные просто
+  не противоречат ей на уровне~$\alpha$. Точно так же большое p-value не доказывает~$H_0$.
+\end{remark}

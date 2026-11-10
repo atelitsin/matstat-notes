@@ -8,9 +8,14 @@
 % раскомментируйте строку ниже и перечислите нужные файлы:
 % \includeonly{lectures/lec01}
 
+% Лектор: используется на титуле и на странице «О конспекте».
+% TODO: заменить заглушку на имя лектора.
+\newcommand{\lecturer}{А.\,А.~Седаков}
+
 \title{Математическая статистика\\[0.3em]\large Конспект лекций}
-\author{Андрей Телицин}
-\date{\today}
+\author{Лектор: \lecturer\\[0.2em]
+        \small Конспект составил: Андрей Телицин}
+\date{Осенний семестр 2026}
 
 \begin{document}
 
@@ -18,11 +23,15 @@
 \tableofcontents
 \clearpage
 
+\input{frontmatter}
 \input{notation}
 
 \include{lectures/lec01}
 \include{lectures/lec02}
 \include{lectures/lec03}
 \include{lectures/lec04}
+
+\clearpage
+\input{bibliography}
 
 \end{document}

@@ -1,0 +1,311 @@
+% =====================================================================
+%  Лекция 6. Точечные оценки. Свойства оценок
+%  Дата: 2026-10-22
+% =====================================================================
+\section{Точечные оценки. Свойства оценок}
+\label{lec:06}
+
+\subsection{Постановка задачи}
+\label{lec06:setting}
+
+Пусть задана случайная величина~$\xi$, функция распределения которой известна с точностью
+до параметра:
+\[
+  F_\xi(x) = F_\xi(x, \theta), \qquad \theta = (\theta_1, \ldots, \theta_m) \in \Th \subset \R^m,
+\]
+где $\Th$~--- \emph{параметрическое множество}, множество всех допустимых значений параметра.
+Сам параметр неизвестен, и его нужно оценить по выборке $X_{[n]} = (X_1, \ldots, X_n)$
+из генеральной совокупности~$\xi$.
+
+\begin{example}
+  Нормальное распределение $\Norm(a, \sigma^2)$:
+  \[
+    F_\xi(x, \theta) = \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi}\,\sigma}
+                       e^{-\frac{(y - a)^2}{2\sigma^2}} \, dy, \qquad
+    \theta = (a, \sigma^2) \in \Th = \R \times (0, +\infty).
+  \]
+  Здесь два неизвестных параметра, $m = 2$.
+\end{example}
+
+\begin{definition}
+  \emph{Оценкой} неизвестного параметра~$\theta$ называется статистика
+  $\hat\theta(X_{[n]})$ (то есть борелевская функция от выборки), значение которой
+  рассматривается как приближённое значение~$\theta$.
+\end{definition}
+
+Под это определение подходит любая статистика, так что оценок одного параметра можно
+придумать сколько угодно. Нужны критерии, по которым оценки сравнивают,~--- \emph{свойства
+оценок}.
+
+\subsection{Несмещённость}
+\label{lec06:unbiased}
+
+\begin{definition}
+  Оценка $\hat\theta(X_{[n]})$ называется \emph{несмещённой} оценкой параметра~$\theta$, если
+  \[
+    \E \hat\theta(X_{[n]}) = \theta \qquad \forall\, \theta \in \Th.
+  \]
+\end{definition}
+
+Смысл: оценка не ошибается <<систематически>>~--- в среднем она даёт верное значение,
+каким бы ни было истинное~$\theta$.
+
+\begin{definition}
+  Оценка $\hat\theta(X_{[n]})$ называется \emph{асимптотически несмещённой} оценкой
+  параметра~$\theta$, если
+  \[
+    \E \hat\theta(X_{[n]}) \xrightarrow[n \to \infty]{} \theta \qquad \forall\, \theta \in \Th.
+  \]
+\end{definition}
+
+\begin{example}[выборочное среднее]
+  \label{lec06:ex:mean}
+  Пусть $\E\xi$ существует и конечно. Так как $X_i$ распределены как~$\xi$,
+  \[
+    \E\Xbar = \E\biggl(\frac1n \sum_{i=1}^n X_i\biggr) = \frac1n \sum_{i=1}^n \E X_i = \E\xi.
+  \]
+  Значит, $\Xbar$~--- несмещённая оценка параметра $\theta = \E\xi$.
+\end{example}
+
+\begin{example}[выборочная дисперсия]
+  \label{lec06:ex:var}
+  Пусть $\theta = \D\xi < \infty$. Проверим, будет ли несмещённой
+  $s^2 = \frac1n \sum_{i=1}^n (X_i - \Xbar)^2$.
+
+  Прибавим и вычтем $\E\xi$ под квадратом и раскроем его:
+  \begin{align*}
+    s^2 &= \frac1n \sum_{i=1}^n \bigl((X_i - \E\xi) - (\Xbar - \E\xi)\bigr)^2 \\
+        &= \frac1n \sum_{i=1}^n (X_i - \E\xi)^2
+           - \frac2n (\Xbar - \E\xi) \sum_{i=1}^n (X_i - \E\xi)
+           + (\Xbar - \E\xi)^2.
+  \end{align*}
+  Множитель $(\Xbar - \E\xi)$ от $i$ не зависит, поэтому вынесен за сумму. Далее
+  $\sum_{i=1}^n (X_i - \E\xi) = n\Xbar - n\E\xi = n(\Xbar - \E\xi)$, так что средний член
+  равен $-2(\Xbar - \E\xi)^2$ и
+  \[
+    s^2 = \frac1n \sum_{i=1}^n (X_i - \E\xi)^2 - (\Xbar - \E\xi)^2.
+  \]
+  Берём математическое ожидание. Так как $\E X_i = \E\xi$ и $\E\Xbar = \E\xi$
+  (пример~\ref{lec06:ex:mean}), это дисперсии:
+  \[
+    \E s^2 = \frac1n \sum_{i=1}^n \D X_i - \D\Xbar = \D\xi - \D\Xbar.
+  \]
+  Осталось найти $\D\Xbar$. Дисперсия суммы \emph{независимых} величин равна сумме
+  дисперсий (для зависимых добавились бы ковариации), поэтому
+  \[
+    \D\Xbar = \D\biggl(\frac1n \sum_{i=1}^n X_i\biggr) = \frac{1}{n^2} \sum_{i=1}^n \D X_i
+            = \frac{1}{n^2} \cdot n\,\D\xi = \frac{\D\xi}{n}.
+  \]
+  Итого
+  \[
+    \E s^2 = \D\xi - \frac1n \D\xi = \frac{n-1}{n}\, \D\xi \ne \D\xi.
+  \]
+  Значит, $s^2$~--- \emph{смещённая} оценка дисперсии (в среднем она её занижает).
+  Но $\frac{n-1}{n} \to 1$, поэтому $s^2$~--- асимптотически несмещённая оценка.
+\end{example}
+
+Смещение легко убрать, домножив на $\frac{n}{n-1}$:
+
+\begin{definition}
+  \emph{Исправленной выборочной дисперсией} называется
+  \[
+    \tilde s^2 = \frac{n}{n-1}\, s^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \Xbar)^2.
+  \]
+\end{definition}
+По линейности $\E\tilde s^2 = \frac{n}{n-1} \cdot \frac{n-1}{n}\, \D\xi = \D\xi$, то есть
+$\tilde s^2$~--- несмещённая оценка дисперсии.
+
+\subsection{Состоятельность}
+\label{lec06:consistency}
+
+Далее $\theta \in \Th \subset \R$.
+
+\begin{reminder}[Сходимость по вероятности и почти наверное]
+  \begin{itemize}
+    \item $\xi_n \toP \xi$, если $\P\{\abs{\xi_n - \xi} \ge \epsilon\} \to 0$
+          при $n \to \infty$ для любого $\epsilon > 0$;
+    \item $\xi_n \toas \xi$, если $\P\bigl\{\omega : \xi_n(\omega) \to \xi(\omega)\bigr\} = 1$.
+  \end{itemize}
+  Из сходимости п.н.\ следует сходимость по вероятности, а из неё~--- сходимость
+  по распределению.
+\end{reminder}
+
+\begin{definition}
+  Оценка $\hat\theta(X_{[n]})$ называется
+  \begin{itemize}
+    \item \emph{состоятельной} оценкой параметра~$\theta$, если
+          $\hat\theta(X_{[n]}) \toP \theta$ при $n \to \infty$ для любого $\theta \in \Th$;
+    \item \emph{сильно состоятельной}, если
+          $\hat\theta(X_{[n]}) \toas \theta$ при $n \to \infty$ для любого $\theta \in \Th$.
+  \end{itemize}
+\end{definition}
+
+Сильно состоятельная оценка состоятельна (п.н.\ $\Rightarrow$ по вероятности).
+
+Смысл: с ростом объёма выборки оценка приближается к истинному значению параметра.
+
+\subsubsection{Состоятельность и статистики первого типа}
+
+Сильную состоятельность многих оценок мы фактически уже доказали. По
+теореме~\ref{lec03:first-type-conv} статистика первого типа сходится п.н.:
+\[
+  S(X_{[n]}) = G(F_n^*) \toas G(F_\xi) = h(a).
+\]
+Поэтому если оценка~--- статистика первого типа и $h(a)$ совпадает с оцениваемым параметром,
+то она сильно состоятельна. Например, при условии, что соответствующие моменты существуют
+и конечны:
+\[
+  \Xbar = a_1^* \toas a_1 = \E\xi, \qquad
+  a_k^* \toas a_k, \qquad
+  a_k^{0*} \toas a_k^0, \qquad
+  s^2 = a_2^{0*} \toas a_2^0 = \D\xi.
+\]
+Так же сходятся к своим теоретическим аналогам выборочные коэффициенты асимметрии
+и эксцесса (раздел~\ref{lec03:moments}).
+
+\begin{remark}
+  Выборочная дисперсия~--- это \emph{центральный} момент $a_2^{0*}$. Начальный момент
+  $a_2^* = \frac1n \sum X_i^2$ сходится к $\E\xi^2$, а не к дисперсии.
+\end{remark}
+
+\subsection{Эффективность}
+\label{lec06:efficiency}
+
+Пусть $\theta \in \Th \subset \R$ и задан некоторый класс оценок~$K$ параметра~$\theta$.
+
+\begin{definition}
+  Оценка $\theta^*(X_{[n]}) \in K$ называется \emph{эффективной} оценкой параметра~$\theta$
+  в классе~$K$, если для любой другой оценки $\hat\theta \in K$
+  \begin{equation}
+    \label{lec06:eq:eff}
+    \E(\theta^* - \theta)^2 \le \E(\hat\theta - \theta)^2 \qquad \forall\, \theta \in \Th.
+  \end{equation}
+\end{definition}
+
+$\E(\hat\theta - \theta)^2$~--- среднеквадратичная ошибка оценки. Эффективная оценка~---
+та, у которой она наименьшая в классе~$K$, причём при \emph{каждом} значении~$\theta$.
+
+Важный частный случай: $K$~--- класс \emph{несмещённых} оценок, $\E\hat\theta = \theta$
+для всех $\hat\theta \in K$. Тогда $\theta = \E\theta^* = \E\hat\theta$, и
+неравенство~\eqref{lec06:eq:eff} принимает вид
+\[
+  \E(\theta^* - \E\theta^*)^2 \le \E(\hat\theta - \E\hat\theta)^2,
+  \qquad\text{то есть}\qquad
+  \D\theta^* \le \D\hat\theta.
+\]
+Эффективная несмещённая оценка~--- это несмещённая оценка с наименьшей дисперсией.
+
+\begin{theorem}[{\cite[гл.~15, теорема~1.1]{bure}}]
+  \label{lec06:uniqueness}
+  Пусть несмещённые оценки $\hat\theta_1$ и $\hat\theta_2$ параметра $\theta \in \Th \subset \R$
+  являются эффективными (в классе несмещённых оценок). Тогда $\hat\theta_1$ и $\hat\theta_2$
+  почти наверное совпадают.
+\end{theorem}
+
+\begin{proof}
+  Обе оценки несмещённые и эффективные, поэтому
+  \[
+    \E\hat\theta_1 = \E\hat\theta_2 = \theta, \qquad \D\hat\theta_1 = \D\hat\theta_2
+  \]
+  (каждая из дисперсий не больше другой). Рассмотрим полусумму
+  \[
+    \tilde\theta = \frac{\hat\theta_1 + \hat\theta_2}{2}, \qquad
+    \E\tilde\theta = \frac{\theta + \theta}{2} = \theta,
+  \]
+  она тоже несмещённая. Справедливо алгебраическое тождество (проверяется раскрытием скобок,
+  это $\frac{u^2 + v^2}{2} = \bigl(\frac{u - v}{2}\bigr)^2 + \bigl(\frac{u + v}{2}\bigr)^2$
+  при $u = \hat\theta_1 - \theta$, $v = \hat\theta_2 - \theta$):
+  \[
+    \frac{(\hat\theta_1 - \theta)^2}{2} + \frac{(\hat\theta_2 - \theta)^2}{2}
+    = \biggl(\frac{\hat\theta_1 - \hat\theta_2}{2}\biggr)^{\!2} + (\tilde\theta - \theta)^2.
+  \]
+  Возьмём математическое ожидание. Для несмещённых оценок $\E(\hat\theta - \theta)^2 = \D\hat\theta$,
+  поэтому
+  \[
+    \D\hat\theta_1 = \frac{\D\hat\theta_1}{2} + \frac{\D\hat\theta_2}{2}
+    = \frac14\, \E(\hat\theta_1 - \hat\theta_2)^2 + \D\tilde\theta.
+  \]
+  Оценка $\tilde\theta$ несмещённая, а $\hat\theta_1$ эффективна, значит,
+  $\D\tilde\theta \ge \D\hat\theta_1$. Отсюда
+  \[
+    \frac14\, \E(\hat\theta_1 - \hat\theta_2)^2 = \D\hat\theta_1 - \D\tilde\theta \le 0,
+  \]
+  а так как левая часть неотрицательна, $\E(\hat\theta_1 - \hat\theta_2)^2 = 0$.
+  Неотрицательная величина с нулевым средним равна нулю п.н., поэтому
+  $\hat\theta_1 = \hat\theta_2$ п.н.
+\end{proof}
+
+Иначе говоря, эффективная несмещённая оценка, если существует, единственна.
+
+\subsection{Асимптотическая нормальность}
+\label{lec06:asymptotic-normality}
+
+Пусть $\theta \in \Th \subset \R$.
+
+\begin{definition}
+  Оценка $\hat\theta(X_{[n]})$ называется \emph{асимптотически нормальной} оценкой
+  параметра~$\theta$ с коэффициентом (рассеивания) $\sigma^2(\theta)$, если
+  \[
+    \sqrt{n}\,\bigl(\hat\theta(X_{[n]}) - \theta\bigr) \tod \zeta \sim \Norm\bigl(0, \sigma^2(\theta)\bigr)
+    \qquad \text{при } n \to \infty, \ \forall\, \theta \in \Th.
+  \]
+\end{definition}
+
+\begin{reminder}[Сходимость по распределению]
+  $\xi_n \tod \xi$, если $F_{\xi_n}(x) \to F_\xi(x)$ в каждой точке~$x$, где $F_\xi$ непрерывна
+  (лекция~\ref{lec:02}). Равносильное определение: $\E g(\xi_n) \to \E g(\xi)$ для любой
+  ограниченной непрерывной функции~$g$.
+\end{reminder}
+
+У нормального закона функция распределения непрерывна всюду, поэтому определение
+означает: для любого $x \in \R$
+\[
+  \P\bigl\{\sqrt{n}\,(\hat\theta - \theta) \le x\bigr\} \xrightarrow[n \to \infty]{}
+  \frac{1}{\sqrt{2\pi}\,\sigma(\theta)} \int_{-\infty}^{x} e^{-\frac{y^2}{2\sigma^2(\theta)}} \, dy.
+\]
+Если $\zeta \sim \Norm(a, \sigma^2)$, то $\frac{\zeta - a}{\sigma} \sim \Norm(0, 1)$. Поэтому
+определение можно записать и через стандартный нормальный закон:
+\[
+  \frac{\sqrt{n}\,(\hat\theta - \theta)}{\sigma(\theta)} \tod \zeta' \sim \Norm(0, 1).
+\]
+
+\subsubsection{Сравнение асимптотически нормальных оценок}
+
+Пусть $\hat\theta_1$ и $\hat\theta_2$~--- асимптотически нормальные оценки~$\theta$
+с коэффициентами $\sigma_1^2(\theta)$ и $\sigma_2^2(\theta)$, и $\sigma_1^2(\theta) < \sigma_2^2(\theta)$.
+Нормированные величины
+\[
+  \frac{\sqrt{n}\,(\hat\theta_1 - \theta)}{\sigma_1(\theta)}
+  \qquad\text{и}\qquad
+  \frac{\sqrt{n}\,(\hat\theta_2 - \theta)}{\sigma_2(\theta)}
+\]
+имеют в пределе одно и то же распределение $\Norm(0, 1)$. Значит, при больших~$n$
+приближённо $\hat\theta_k \approx \theta + \frac{\sigma_k(\theta)}{\sqrt{n}}\, \zeta'$:
+обе оценки разбросаны вокруг~$\theta$ по нормальному закону, но у $\hat\theta_1$ разброс меньше.
+Поэтому $\hat\theta_1$ лучше: из двух асимптотически нормальных оценок предпочтительнее
+та, у которой меньше коэффициент $\sigma^2(\theta)$.
+
+\begin{keybox}[Что нужно знать к экзамену]
+  \begin{itemize}
+    \item Определение оценки; параметрическое множество~$\Th$.
+    \item Несмещённость и асимптотическая несмещённость; $\E\Xbar = \E\xi$.
+    \item Вывод $\E s^2 = \frac{n-1}{n} \D\xi$ (через $\D\Xbar = \D\xi / n$);
+          исправленная дисперсия $\tilde s^2$ и её несмещённость.
+    \item Состоятельность и сильная состоятельность; почему статистики первого типа
+          дают сильно состоятельные оценки (моменты, $\Xbar$, $s^2$).
+    \item Эффективность в классе~$K$; для несмещённых оценок~--- минимальная дисперсия.
+    \item Теорема о единственности эффективной несмещённой оценки с доказательством.
+    \item Асимптотическая нормальность, коэффициент $\sigma^2(\theta)$; как сравнивать
+          асимптотически нормальные оценки.
+  \end{itemize}
+  \emph{Где легко ошибиться:}
+  \begin{itemize}
+    \item $s^2$ смещена, $\tilde s^2$ несмещена; в $\tilde s^2$ делим на $n - 1$;
+    \item $s^2 = a_2^{0*}$~--- центральный момент; $a_2^* \to \E\xi^2$, а не $\D\xi$;
+    \item $\D\Xbar = \D\xi / n$ использует независимость $X_i$;
+    \item сходимость п.н.: вероятность множества, где $\xi_n \to \xi$, равна~$1$, а не~$0$;
+    \item в доказательстве единственности нужен именно $\E(\hat\theta_1 - \hat\theta_2)^2 = 0$
+          (с квадратом), отсюда равенство п.н.;
+    \item в эффективности неравенство должно выполняться при всех $\theta \in \Th$.
+  \end{itemize}
+\end{keybox}

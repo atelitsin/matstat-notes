@@ -22,13 +22,13 @@ jobs:
           latexmk_use_lualatex: false
 
       - name: Rename PDF
-        run: cp build/main.pdf build/matstat_lecture_notes_2026.pdf
+        run: cp build/main.pdf matstat_lecture_notes_2026.pdf
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: matstat-notes
-          path: build/matstat_lecture_notes_2026.pdf
+          path: matstat_lecture_notes_2026.pdf
 
       - name: Publish "latest" release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -38,4 +38,4 @@ jobs:
           name: Свежая версия конспекта
           prerelease: true
           make_latest: true
-          files: build/matstat_lecture_notes_2026.pdf
+          files: matstat_lecture_notes_2026.pdf

@@ -2,7 +2,7 @@
 
 Конспект лекций по математической статистике в LaTeX. 
 
-**[Скачать свежий PDF](https://github.com/atelitsin/matstat-notes/releases/download/latest/main.pdf)** — собирается автоматически при каждом пуше в `main`.
+**[Скачать свежий PDF](https://github.com/atelitsin/matstat-notes/releases/download/latest/matstat_lecture_notes_2026.pdf)** — собирается автоматически при каждом пуше в `main`.
 
 ## Важно
 

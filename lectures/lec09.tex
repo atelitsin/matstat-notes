@@ -1,0 +1,406 @@
+% =====================================================================
+%  Лекция 9. Точные доверительные интервалы для параметров
+%  нормального распределения
+%  Дата: 2026-11-12
+% =====================================================================
+\section[Точные доверительные интервалы для нормального распределения]%
+  {Точные доверительные интервалы для параметров нормального распределения}
+\label{lec:09}
+
+Пусть $\xi \sim \Norm(a, \sigma^2)$ и $X_{[n]} = (X_1, \ldots, X_n)$~--- выборка из~$\xi$.
+Хотим построить доверительные интервалы для $a$ и~$\sigma^2$.
+
+В лекции~\ref{lec:08} интервалы были \emph{асимптотическими}: вероятность накрытия
+стремилась к $1 - \epsilon$ при $n \to \infty$. Теперь построим \emph{точные} интервалы:
+\[
+  \P\bigl\{S^-(X_{[n]}, \epsilon) < \theta < S^+(X_{[n]}, \epsilon)\bigr\} = 1 - \epsilon,
+  \qquad \epsilon \in (0, 1),
+\]
+при \emph{любом}~$n$. Для этого введем некоторые сведения о многомерном нормальном распределении.
+
+\subsection{Многомерное нормальное распределение}
+\label{lec09:mvn}
+
+\begin{definition}
+  Случайный вектор $\eta = (\eta_1, \ldots, \eta_m)^T$ имеет \emph{многомерное нормальное
+  распределение} $\Norm(a, \Sigma)$, где $a \in \R^m$, а $\Sigma$~--- симметричная
+  положительно определённая матрица $m \times m$, если его плотность равна
+  \[
+    f_\eta(x) = \frac{1}{(2\pi)^{m/2} \sqrt{\abs{\Sigma}}}\,
+                e^{-\frac12 (x - a)^T \Sigma^{-1} (x - a)},
+    \qquad x \in \R^m,
+  \]
+  где $\abs{\Sigma} = \det\Sigma$. При этом $a = \E\eta$~--- вектор математических ожиданий,
+  $\Sigma = \bigl(\cov(\eta_i, \eta_j)\bigr)_{i, j = 1}^m$~--- ковариационная матрица.
+\end{definition}
+
+При $m = 1$ это обычная плотность $\Norm(a, \sigma^2)$ с $\Sigma = \sigma^2$.
+
+\begin{remark}
+  В общем случае матрица ковариаций является симметричной и неотрицательно определённой.
+  В определении выше мы потребовали положительную определённость, чтобы существовала плотность.
+  Иначе бы получилось вырожденное многомерное нормальное распределение: у него нет плотности, но
+  оно всё равно имеет смысл как распределение на подпространстве меньшей размерности.
+\end{remark}
+
+\subsubsection{Линейное преобразование}
+
+\begin{lemma}[{\cite[гл.~16, лемма~2.1]{bure}}]
+  \label{lec09:linear}
+  Пусть $\eta \sim \Norm(a, \Sigma)$~--- вектор размерности~$m$, $A$~--- матрица $k \times m$,
+  $b \in \R^k$. Тогда
+  \[
+    \zeta = A\eta + b \sim \Norm\bigl(Aa + b,\ A \Sigma A^T\bigr).
+  \]
+\end{lemma}
+
+То есть линейное преобразование не выводит из класса нормальных распределений: меняются
+только параметры. Вектор средних преобразуется как сам вектор ($a \mapsto Aa + b$),
+ковариационная матрица~--- как $\Sigma \mapsto A \Sigma A^T$ (сдвиг $b$ на неё не влияет).
+
+\begin{addendum}
+  \emph{Доказательство} \cite[гл.~16, лемма~2.1]{bure} использует характеристические функции
+  (лекция~\ref{lec:08}): для вектора $\phi_\eta(t) = \E e^{i t^T \eta}$, $t \in \R^m$, и
+  характеристическая функция однозначно определяет распределение. Для $\eta \sim \Norm(a, \Sigma)$
+  известно, что $\phi_\eta(t) = e^{i t^T a - \frac12 t^T \Sigma t}$. Тогда для $s \in \R^k$
+  \[
+    \phi_\zeta(s) = \E e^{i s^T (A\eta + b)} = e^{i s^T b}\, \phi_\eta(A^T s)
+    = e^{i s^T (Aa + b) - \frac12 s^T (A \Sigma A^T) s},
+  \]
+  а это характеристическая функция $\Norm(Aa + b, A\Sigma A^T)$.
+\end{addendum}
+
+\subsubsection{Сферическое нормальное распределение}
+
+Частный случай: $\eta \sim \Norm(0, \sigma^2 I_m)$, где $I_m$~--- единичная матрица.
+Подставим $a = 0$, $\Sigma = \sigma^2 I_m$ в формулу плотности: $\Sigma^{-1} = \frac{1}{\sigma^2} I_m$,
+$\det\Sigma = \sigma^{2m}$, и для точки $x = (x_1, \ldots, x_m) \in \R^m$
+\[
+  f_\eta(x) = \frac{1}{(2\pi\sigma^2)^{m/2}}\, e^{-\frac{x_1^2 + \ldots + x_m^2}{2\sigma^2}}.
+\]
+Плотность зависит только от квадрата расстояния $x_1^2 + \ldots + x_m^2$ от точки~$x$ до
+начала координат, поэтому такое распределение называют \emph{сферическим}: во всех точках
+сферы с центром в нуле плотность одинакова, и при $m = 2$ линии уровня~--- окружности.
+
+\begin{lemma}
+  \label{lec09:spherical}
+  \leavevmode
+  \begin{enumerate}
+    \item Компоненты нормального вектора независимы тогда и только тогда, когда его
+          ковариационная матрица диагональна. В частности, компоненты
+          $\eta \sim \Norm(0, \sigma^2 I_m)$ независимы.
+    \item {\upshape\cite[гл.~16, лемма~2.2]{bure}} Если $\eta \sim \Norm(0, \sigma^2 I_m)$ и
+          $\bar\eta = \frac1m \sum_{i=1}^m \eta_i$, то $\bar\eta$ и вектор
+          $(\eta_1 - \bar\eta, \ldots, \eta_m - \bar\eta)$ взаимно независимы.
+  \end{enumerate}
+\end{lemma}
+
+\begin{remark}
+  Для произвольных случайных величин из некоррелированности независимость не следует
+  (лекция~\ref{lec:03}). Пункт~1 говорит, что для \emph{нормального} вектора следует.
+\end{remark}
+
+\begin{addendum}
+  \emph{Доказательство.} 1.~Если $\Sigma = \mathrm{diag}(\sigma_1^2, \ldots, \sigma_m^2)$, то
+  $(x - a)^T \Sigma^{-1} (x - a) = \sum_i (x_i - a_i)^2 / \sigma_i^2$ и
+  $\abs{\Sigma} = \prod_i \sigma_i^2$, поэтому плотность распадается в произведение
+  одномерных нормальных плотностей~--- это и есть независимость. Обратно, у независимых
+  компонент ковариации равны нулю.
+
+  2.~Вектор $(\bar\eta, \eta_1 - \bar\eta, \ldots, \eta_m - \bar\eta)$~--- линейное
+  преобразование~$\eta$, поэтому по лемме~\ref{lec09:linear} он нормальный. Найдём
+  ковариации $\bar\eta$ с отклонениями: так как $\cov(\eta_i, \eta_j) = \sigma^2 \delta_{ij}$,
+  \[
+    \cov(\eta_k, \bar\eta) = \frac1m \sum_{i=1}^m \cov(\eta_k, \eta_i) = \frac{\sigma^2}{m},
+    \qquad
+    \D\bar\eta = \frac{\sigma^2}{m},
+    \qquad
+    \cov(\eta_k - \bar\eta, \bar\eta) = \frac{\sigma^2}{m} - \frac{\sigma^2}{m} = 0.
+  \]
+  Ковариационная матрица всего вектора блочно-диагональна (блок $\bar\eta$ и блок
+  отклонений). Для нормального вектора отсюда следует независимость блоков~--- это
+  обобщение пункта~1 на группы компонент. (Плотности у вектора отклонений нет: его
+  компоненты в сумме дают ноль. Поэтому аккуратно это доказывается через характеристические
+  функции: $\phi$ всего вектора распадается в произведение $\phi$ блоков.)
+\end{addendum}
+
+\subsubsection{Ортогональное преобразование}
+
+\begin{lemma}[{\cite[гл.~16, лемма~2.3]{bure}}]
+  \label{lec09:orthogonal}
+  Пусть $\eta \sim \Norm(0, I_m)$~--- стандартный многомерный нормальный вектор, $C$~---
+  ортогональная матрица ($C^T C = C C^T = I_m$), $\zeta = C\eta$. Тогда при $0 \le r < m$
+  \[
+    \sum_{i=1}^m \eta_i^2 - \sum_{j=1}^r \zeta_j^2 \sim \chi^2_{m-r}.
+  \]
+\end{lemma}
+
+Распределение $\chi^2_k$ определено в лекции~\ref{lec:04} (раздел~\ref{lec04:chi2-limit}):
+это распределение суммы квадратов $k$ независимых $\Norm(0, 1)$.
+
+\begin{addendum}
+  \emph{Доказательство.} По лемме~\ref{lec09:linear}
+  $\zeta \sim \Norm(0, C I_m C^T) = \Norm(0, I_m)$, то есть $\zeta_1, \ldots, \zeta_m$~---
+  независимые $\Norm(0, 1)$ (лемма~\ref{lec09:spherical}). Ортогональное преобразование
+  сохраняет длину:
+  \[
+    \sum_{i=1}^m \eta_i^2 = \eta^T \eta = \eta^T C^T C \eta = \zeta^T \zeta = \sum_{j=1}^m \zeta_j^2.
+  \]
+  Поэтому $\sum_i \eta_i^2 - \sum_{j \le r} \zeta_j^2 = \sum_{j = r+1}^m \zeta_j^2$~--- сумма квадратов
+  $m - r$ независимых $\Norm(0, 1)$, то есть $\chi^2_{m-r}$. Заодно видно, что эта сумма
+  не зависит от $\zeta_1, \ldots, \zeta_r$.
+\end{addendum}
+
+
+\subsection{Распределение Стьюдента}
+\label{lec09:student}
+
+\begin{definition}
+  Пусть $\eta \sim \Norm(0, 1)$ и $\zeta \sim \chi^2_k$~--- независимые случайные величины.
+  Распределение величины
+  \[
+    \frac{\eta}{\sqrt{\zeta / k}}
+  \]
+  называется \emph{распределением Стьюдента с $k$ степенями свободы} и обозначается $T_k$.
+\end{definition}
+
+Плотность $T_k$ симметрична относительно нуля и похожа на нормальную, но с более тяжёлыми
+хвостами; при $k \to \infty$ распределение $T_k$ приближается к $\Norm(0, 1)$.
+
+\subsection{Распределения статистик нормальной выборки}
+\label{lec09:theorem}
+
+Обозначим
+\[
+  \tilde s^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \Xbar)^2, \qquad
+  s_0^2 = \frac1n \sum_{i=1}^n (X_i - a)^2.
+\]
+($\tilde s^2$~--- исправленная выборочная дисперсия; $s_0^2$~--- аналог выборочной дисперсии,
+когда~$a$ известно.)
+
+\begin{theorem}[{\cite[гл.~16, теорема~4.1]{bure}}]
+  \label{lec09:main}
+  Пусть $X_{[n]}$~--- выборка из $\xi \sim \Norm(a, \sigma^2)$. Тогда
+  \begin{enumerate}
+    \item $\dfrac{\Xbar - a}{\sigma}\, \sqrt{n} \sim \Norm(0, 1)$;
+    \item $\dfrac{\Xbar - a}{\tilde s}\, \sqrt{n} \sim T_{n-1}$;
+    \item $\dfrac{(n-1)\, \tilde s^2}{\sigma^2} \sim \chi^2_{n-1}$;
+    \item $\dfrac{n\, s_0^2}{\sigma^2} \sim \chi^2_n$.
+  \end{enumerate}
+\end{theorem}
+
+Отличие пунктов 3 и~4: если среднее~$a$ известно, степеней свободы~$n$; если вместо~$a$
+подставлено~$\Xbar$, одна степень свободы теряется. Аналогично в пунктах 1 и~2: замена
+неизвестного $\sigma$ на $\tilde s$ превращает нормальное распределение в распределение
+Стьюдента.
+
+Доказательство~--- в разделе~\ref{lec09:proof}. Сначала посмотрим, как с помощью теоремы
+строить точные доверительные интервалы.
+
+\subsection{Точные доверительные интервалы}
+\label{lec09:intervals}
+
+Обозначения квантилей уровня~$p$: $z_p$~--- для $\Norm(0, 1)$, $t_{p,\,k}$~--- для $T_k$,
+$\chi^2_{p,\,k}$~--- для $\chi^2_k$. Плотности $\Norm(0, 1)$ и $T_k$ симметричны, поэтому
+$z_{\epsilon/2} = -z_{1-\epsilon/2}$ и $t_{\epsilon/2,\,k} = -t_{1-\epsilon/2,\,k}$.
+
+Схема построения интервала везде одна: берём статистику из теоремы~\ref{lec09:main}, распределение которой
+известно и не зависит от неизвестных параметров, решаем двойное неравенство, в котором слева и справа
+соответствующие квантили, и получаем интервал для неизвестного параметра. Везде уровень доверия~$1 - \epsilon$.
+
+\subsubsection{Интервал для \texorpdfstring{$a$}{a} при известном \texorpdfstring{$\sigma^2$}{σ²}}
+
+По пункту~1
+\[
+  \P\biggl\{-z_{1-\frac\epsilon2} < \frac{\Xbar - a}{\sigma}\sqrt{n} < z_{1-\frac\epsilon2}\biggr\} = 1 - \epsilon,
+\]
+откуда
+\[
+  \Xbar - z_{1-\frac\epsilon2} \frac{\sigma}{\sqrt n} < a < \Xbar + z_{1-\frac\epsilon2} \frac{\sigma}{\sqrt n}.
+\]
+С вероятностью $1 - \epsilon$ этот интервал накрывает~$a$.
+
+\subsubsection{Интервал для \texorpdfstring{$a$}{a} при неизвестном \texorpdfstring{$\sigma^2$}{σ²}}
+
+Теперь $\sigma$ в интервал подставить нельзя. Пункт~2 заменяет его на~$\tilde s$:
+\[
+  \P\biggl\{-t_{1-\frac\epsilon2,\,n-1} < \frac{\Xbar - a}{\tilde s}\sqrt{n} < t_{1-\frac\epsilon2,\,n-1}\biggr\} = 1 - \epsilon,
+\]
+\[
+  \Xbar - t_{1-\frac\epsilon2,\,n-1} \frac{\tilde s}{\sqrt n} < a < \Xbar + t_{1-\frac\epsilon2,\,n-1} \frac{\tilde s}{\sqrt n}.
+\]
+
+\subsubsection{Интервал для \texorpdfstring{$\sigma^2$}{σ²} при неизвестном \texorpdfstring{$a$}{a}}
+
+Плотность $\chi^2$ несимметрична, поэтому хвосты задаём отдельно: $\epsilon_1$ слева,
+$\epsilon_2$ справа, $\epsilon_1 + \epsilon_2 = \epsilon$ (\cref{lec09:fig:chi2}). По пункту~3
+\[
+  \P\biggl\{\chi^2_{\epsilon_1,\,n-1} < \frac{(n-1)\,\tilde s^2}{\sigma^2} < \chi^2_{1-\epsilon_2,\,n-1}\biggr\} = 1 - \epsilon.
+\]
+Переворачиваем дроби (все величины положительны, знаки неравенств меняются):
+\[
+  \frac{(n-1)\,\tilde s^2}{\chi^2_{1-\epsilon_2,\,n-1}} < \sigma^2 < \frac{(n-1)\,\tilde s^2}{\chi^2_{\epsilon_1,\,n-1}}.
+\]
+Если важно, чтобы интервал был симметричным, то берем $\epsilon_1 = \epsilon_2 = \frac\epsilon2$.
+
+\subsubsection{Интервал для \texorpdfstring{$\sigma^2$}{σ²} при известном \texorpdfstring{$a$}{a}}
+
+Аналогично по пункту~4:
+\[
+  \P\biggl\{\chi^2_{\epsilon_1,\,n} < \frac{n\, s_0^2}{\sigma^2} < \chi^2_{1-\epsilon_2,\,n}\biggr\} = 1 - \epsilon,
+  \qquad
+  \frac{n\, s_0^2}{\chi^2_{1-\epsilon_2,\,n}} < \sigma^2 < \frac{n\, s_0^2}{\chi^2_{\epsilon_1,\,n}}.
+\]
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.7\textwidth, height=4.8cm,
+      xmin=0, xmax=16, ymin=0, ymax=0.2,
+      axis lines=left, xlabel={$x$}, ylabel={плотность $\chi^2_{n-1}$},
+      xtick={0.711, 9.488},
+      xticklabels={$\chi^2_{\epsilon_1,\,n-1}$, $\chi^2_{1-\epsilon_2,\,n-1}$},
+      ytick=\empty,
+    ]
+      % n - 1 = 4: плотность x e^{-x/2} / 4
+      \addplot[fill=blue!12, draw=none, domain=0.711:9.488, samples=80] {x*exp(-x/2)/4} \closedcycle;
+      \addplot[fill=red!45, draw=none, domain=0:0.711, samples=30] {x*exp(-x/2)/4} \closedcycle;
+      \addplot[fill=red!45, draw=none, domain=9.488:16, samples=40] {x*exp(-x/2)/4} \closedcycle;
+      \addplot[thick, blue!70!black, domain=0:16, samples=150] {x*exp(-x/2)/4};
+      \node[font=\small] at (axis cs:4, 0.07) {$1 - \epsilon$};
+      \node[font=\small] at (axis cs:1.1, 0.12) {$\epsilon_1$};
+      \node[font=\small] at (axis cs:11.5, 0.035) {$\epsilon_2$};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Квантили $\chi^2_{n-1}$ (здесь $n - 1 = 4$, $\epsilon_1 = \epsilon_2 = 0{,}05$):
+           хвосты площадью $\epsilon_1$ и $\epsilon_2$, плотность несимметрична.}
+  \label{lec09:fig:chi2}
+\end{figure}
+
+\begin{keybox}[Точные доверительные интервалы для $\Norm(a, \sigma^2)$, уровень $1 - \epsilon$]
+  \renewcommand{\arraystretch}{2.2}
+  \[
+    \begin{array}{l|l|l}
+      \text{что оцениваем} & \text{статистика} & \text{интервал} \\ \hline
+      a,\ \sigma^2 \text{ известно}
+        & \frac{\Xbar - a}{\sigma}\sqrt n \sim \Norm(0, 1)
+        & \Xbar \mp z_{1-\frac\epsilon2}\, \frac{\sigma}{\sqrt n} \\
+      a,\ \sigma^2 \text{ неизвестно}
+        & \frac{\Xbar - a}{\tilde s}\sqrt n \sim T_{n-1}
+        & \Xbar \mp t_{1-\frac\epsilon2,\,n-1}\, \frac{\tilde s}{\sqrt n} \\
+      \sigma^2,\ a \text{ неизвестно}
+        & \frac{(n-1)\tilde s^2}{\sigma^2} \sim \chi^2_{n-1}
+        & \Bigl(\frac{(n-1)\tilde s^2}{\chi^2_{1-\epsilon_2,\,n-1}},\ \frac{(n-1)\tilde s^2}{\chi^2_{\epsilon_1,\,n-1}}\Bigr) \\
+      \sigma^2,\ a \text{ известно}
+        & \frac{n s_0^2}{\sigma^2} \sim \chi^2_n
+        & \Bigl(\frac{n s_0^2}{\chi^2_{1-\epsilon_2,\,n}},\ \frac{n s_0^2}{\chi^2_{\epsilon_1,\,n}}\Bigr)
+    \end{array}
+  \]
+\end{keybox}
+
+\subsection{Доказательство теоремы}
+\label{lec09:proof}
+
+Все пункты выводятся с использованием лемм раздела~\ref{lec09:mvn}. Порядок доказательств: 1, 4, 3, 2.
+
+Выборка~--- нормальный вектор: $X_{[n]} \sim \Norm(\mathbf{1}_n a,\ \sigma^2 I_n)$, где
+$\mathbf{1}_n = (1, \ldots, 1)^T$ (компоненты независимы, у каждой среднее~$a$ и
+дисперсия~$\sigma^2$). Выборочное среднее: $\Xbar = \frac1n \mathbf{1}_n^T X_{[n]}$.
+
+\paragraph{Пункт 1.}
+Запишем статистику как линейное преобразование выборки:
+\[
+  \frac{\Xbar - a}{\sigma}\sqrt n
+  = \underbrace{\frac{\mathbf{1}_n^T}{\sigma\sqrt n}}_{A} X_{[n]}
+    \ \underbrace{-\ \frac{a\sqrt n}{\sigma}}_{b}.
+\]
+По лемме~\ref{lec09:linear} она имеет нормальное распределение с параметрами:
+\[
+  A\,\mathbf{1}_n a + b = \frac{n a}{\sigma\sqrt n} - \frac{a\sqrt n}{\sigma} = 0,
+  \qquad
+  A\,(\sigma^2 I_n)\,A^T = \frac{\sigma^2\, \mathbf{1}_n^T \mathbf{1}_n}{\sigma^2 n} = \frac{n}{n} = 1.
+\]
+Итак, статистика имеет распределение $\Norm(0, 1)$. Доказано.
+
+\paragraph{Пункт 4.}
+Положим $\delta_i = \frac{X_i - a}{\sigma}$. Это независимые $\Norm(0, 1)$, поэтому
+\[
+  \frac{n\, s_0^2}{\sigma^2} = \sum_{i=1}^n \biggl(\frac{X_i - a}{\sigma}\biggr)^2 = \sum_{i=1}^n \delta_i^2 \sim \chi^2_n
+\]
+по определению~$\chi^2_n$. Доказано.
+
+\paragraph{Пункт 3.}
+Прибавим и вычтем~$a$:
+\begin{align*}
+  \tilde s^2
+  &= \frac{1}{n-1} \sum_{i=1}^n \bigl((X_i - a) - (\Xbar - a)\bigr)^2
+   = \frac{1}{n-1} \biggl[\sum_{i=1}^n (X_i - a)^2 - 2(\Xbar - a)\sum_{i=1}^n (X_i - a) + n(\Xbar - a)^2\biggr] \\
+  &= \frac{1}{n-1} \biggl[\sum_{i=1}^n (X_i - a)^2 - n(\Xbar - a)^2\biggr]
+   = \frac{1}{n-1} \biggl[\sum_{i=1}^n (X_i - a)^2 - \biggl(\frac{1}{\sqrt n} \sum_{i=1}^n (X_i - a)\biggr)^{\!2}\,\biggr],
+\end{align*}
+так как $\sum_i (X_i - a) = n(\Xbar - a)$. Делим на $\sigma^2$ и переходим к $\delta_i$:
+\[
+  \frac{(n-1)\,\tilde s^2}{\sigma^2}
+  = \sum_{i=1}^n \delta_i^2 - \biggl(\sum_{i=1}^n \frac{1}{\sqrt n}\, \delta_i\biggr)^{\!2}.
+\]
+Здесь $\delta = (\delta_1, \ldots, \delta_n)^T \sim \Norm(0, I_n)$.
+Пусть $C=(C_1, C_2, \ldots, C_n)^T$. Возьмём строку
+$C_1 = \bigl(\frac{1}{\sqrt n}, \ldots, \frac{1}{\sqrt n}\bigr)$: длина соответствующего вектора
+равна~$1$. Используя метод Грама--Шмидта её можно дополнить строками $C_2, \ldots, C_n$ до
+ортогональной матрицы $C$ ($C C^T = C^T C = I_n$). Тогда второе слагаемое~---
+это $(C_1 \delta)^2 = \zeta_1^2$, где $\zeta = C\delta$, и
+\[
+  \frac{(n-1)\,\tilde s^2}{\sigma^2} = \sum_{i=1}^n \delta_i^2 - \zeta_1^2 \sim \chi^2_{n-1}
+\]
+по лемме~\ref{lec09:orthogonal} с $m = n$, $r = 1$.
+
+\paragraph{Пункт 2.}
+Разделим статистику пункта~1 на корень из статистики пункта~3, делённой на число степеней
+свободы:
+\[
+  \frac{\dfrac{\Xbar - a}{\sigma}\sqrt n}{\sqrt{\dfrac{(n-1)\,\tilde s^2}{\sigma^2} \Big/ (n-1)}}
+  = \frac{\dfrac{\Xbar - a}{\sigma}\sqrt n}{\tilde s / \sigma}
+  = \frac{\Xbar - a}{\tilde s}\sqrt n.
+\]
+Неизвестное~$\sigma$ сократилось. Числитель имеет распределение $\Norm(0, 1)$ (пункт~1),
+под корнем в знаменателе $\chi^2_{n-1}$ (пункт~3). Остаётся проверить, что числитель
+и знаменатель независимы,~--- тогда дробь имеет распределение $T_{n-1}$ по определению.
+
+Вектор $(X_1 - a, \ldots, X_n - a) \sim \Norm(0, \sigma^2 I_n)$, его среднее равно
+$\Xbar - a$, а отклонения от среднего~--- это $(X_i - a) - (\Xbar - a) = X_i - \Xbar$.
+По лемме~\ref{lec09:spherical} (пункт~2) $\Xbar - a$ и $(X_1 - \Xbar, \ldots, X_n - \Xbar)$
+независимы. Числитель зависит только от $\Xbar - a$, а $\tilde s^2$~--- только от отклонений
+$X_i - \Xbar$, значит, числитель и знаменатель независимы. Пункт~2 доказан.
+
+\begin{remark}
+  Дополнительно получили $\Xbar \sim \Norm\bigl(a, \frac{\sigma^2}{n}\bigr)$: это лемма~\ref{lec09:linear}
+  с $A = \frac1n \mathbf{1}_n^T$, $b = 0$. Для нормальной выборки это точное распределение,
+  а не только предельное, как в ЦПТ.
+\end{remark}
+
+В следующей лекции~--- проверка статистических гипотез и лемма Неймана--Пирсона.
+
+\begin{keybox}[Что нужно знать к экзамену]
+  \begin{itemize}
+    \item Многомерное нормальное распределение: плотность, смысл $a$ и~$\Sigma$.
+    \item Лемма о линейном преобразовании: $A\eta + b \sim \Norm(Aa + b, A\Sigma A^T)$.
+    \item Для нормального вектора: независимость компонент $\iff$ $\Sigma$ диагональна;
+          независимость $\bar\eta$ и отклонений $\eta_i - \bar\eta$ при $\eta \sim \Norm(0, \sigma^2 I)$.
+    \item Лемма об ортогональном преобразовании: $\sum \eta_i^2 - \sum_{j \le r} \zeta_j^2 \sim \chi^2_{m-r}$.
+    \item Определение распределения Стьюдента.
+    \item Теорема о четырёх статистиках с доказательством (порядок 1, 4, 3, 2).
+    \item Четыре точных доверительных интервала и какая статистика для какого случая.
+  \end{itemize}
+  \emph{Где легко ошибиться:}
+  \begin{itemize}
+    \item независимость компонент нормального вектора~--- при \emph{диагональной}, а не только
+          единичной~$\Sigma$;
+    \item в $\tilde s^2$ делим на $n - 1$; при известном~$a$ степеней свободы~$n$, при
+          неизвестном~$n - 1$;
+    \item в интервале для~$a$ при неизвестном~$\sigma^2$ множитель $\tilde s / \sqrt n$ и квантиль
+          Стьюдента, а не нормального закона;
+    \item для $\sigma^2$ квантили $\chi^2$ несимметричны: нижней границе соответствует
+          \emph{верхний} квантиль $\chi^2_{1-\epsilon_2}$, и наоборот;
+  \end{itemize}
+\end{keybox}
